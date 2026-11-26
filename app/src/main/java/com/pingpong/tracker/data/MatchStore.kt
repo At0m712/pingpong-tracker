@@ -111,6 +111,32 @@ class MatchStore(context: Context) {
 
     fun isSyncing(): Boolean = prefs.getBoolean(KEY_IS_SYNCING, false)
 
+    // Custom notification preferences
+    fun isNotif30mEnabled(): Boolean = prefs.getBoolean(KEY_NOTIF_30M, true)
+    fun setNotif30mEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NOTIF_30M, enabled).apply()
+    }
+
+    fun isNotifLiveEnabled(): Boolean = prefs.getBoolean(KEY_NOTIF_LIVE, true)
+    fun setNotifLiveEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NOTIF_LIVE, enabled).apply()
+    }
+
+    fun isNotifClubsEnabled(): Boolean = prefs.getBoolean(KEY_NOTIF_CLUBS, true)
+    fun setNotifClubsEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NOTIF_CLUBS, enabled).apply()
+    }
+
+    fun isNotifIntlEnabled(): Boolean = prefs.getBoolean(KEY_NOTIF_INTL, true)
+    fun setNotifIntlEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NOTIF_INTL, enabled).apply()
+    }
+
+    fun isNotifVpnHintEnabled(): Boolean = prefs.getBoolean(KEY_NOTIF_VPN_HINT, true)
+    fun setNotifVpnHintEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NOTIF_VPN_HINT, enabled).apply()
+    }
+
     fun hasNotified(key: String): Boolean = notifiedPrefs.contains(key)
 
     fun markNotified(key: String, nowMs: Long = System.currentTimeMillis()) {
@@ -161,6 +187,11 @@ class MatchStore(context: Context) {
         const val KEY_LAST_SYNC_MS = "last_sync_ms"
         const val KEY_LAST_ERROR = "last_error"
         const val KEY_IS_SYNCING = "is_syncing"
+        const val KEY_NOTIF_30M = "notif_30m_enabled"
+        const val KEY_NOTIF_LIVE = "notif_live_enabled"
+        const val KEY_NOTIF_CLUBS = "notif_clubs_enabled"
+        const val KEY_NOTIF_INTL = "notif_intl_enabled"
+        const val KEY_NOTIF_VPN_HINT = "notif_vpn_hint"
 
         private const val SEVEN_DAYS_MS = 7L * 24L * 60L * 60L * 1000L
 

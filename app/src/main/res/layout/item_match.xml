@@ -13,7 +13,7 @@
         android:id="@+id/item_accent_bar"
         android:layout_width="3dp"
         android:layout_height="match_parent"
-        android:layout_marginVertical="10dp"
+        android:layout_marginVertical="12dp"
         android:layout_marginStart="2dp"
         android:background="#3B82F6" />
 
@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="11dp">
+        android:paddingVertical="12dp">
 
         <!-- Header row: competition + status/time -->
         <LinearLayout
@@ -57,13 +57,24 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Home Row -->
+        <!-- Home Row with monogram crest -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="9dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_crest_home"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_crest_neutral"
+                android:gravity="center"
+                android:textColor="#FAFAFA"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/item_home"
@@ -73,27 +84,40 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="#FAFAFA"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/item_score_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_width="28dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_score_box"
                 android:fontFamily="monospace"
+                android:gravity="center"
                 android:textColor="#FAFAFA"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Away Row -->
+        <!-- Away Row with monogram crest -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_crest_away"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_crest_neutral"
+                android:gravity="center"
+                android:textColor="#D4D4D8"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/item_away"
@@ -103,16 +127,18 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="#D4D4D8"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/item_score_away"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_width="28dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_score_box"
                 android:fontFamily="monospace"
+                android:gravity="center"
                 android:textColor="#D4D4D8"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -120,7 +146,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="9dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

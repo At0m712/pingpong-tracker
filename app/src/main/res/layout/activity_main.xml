@@ -6,22 +6,23 @@
     android:background="#09090B"
     android:orientation="vertical">
 
-    <!-- Top Editorial Header -->
+    <!-- Top Brand Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#09090B"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="18dp"
-        android:paddingTop="14dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
         android:paddingBottom="12dp">
 
-        <View
-            android:layout_width="3dp"
-            android:layout_height="26dp"
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginEnd="10dp"
-            android:background="#E11D48" />
+            android:contentDescription="Logo PingPong Tracker"
+            android:src="@drawable/ic_brand_logo" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -35,17 +36,31 @@
                 android:letterSpacing="0.08"
                 android:text="PING TRACKER"
                 android:textColor="#FAFAFA"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/header_sync_status"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:text="MAJ --:--"
-                android:textColor="#71717A"
-                android:textSize="11sp" />
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/header_status_dot"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/bg_status_dot" />
+
+                <TextView
+                    android:id="@+id/header_sync_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MAJ --:--"
+                    android:textColor="#71717A"
+                    android:textSize="11sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <ImageButton
@@ -75,9 +90,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#1F1F23" />
+        android:background="#1D1D22" />
 
-    <!-- Error banner (hidden unless error) -->
+    <!-- Error banner -->
     <TextView
         android:id="@+id/banner_error"
         android:layout_width="match_parent"
@@ -108,11 +123,200 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <!-- Hero Spotlight Match Card -->
+                <LinearLayout
+                    android:id="@+id/hero_match_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_hero_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/hero_kicker"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:letterSpacing="0.08"
+                            android:maxLines="1"
+                            android:text="PROCHAIN RENDEZ-VOUS"
+                            android:textColor="#FB7185"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/hero_vpn_badge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_vpn_pill"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:text="VPN"
+                            android:textColor="#FBBF24"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/hero_countdown"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_live_pill"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="2dp"
+                            android:textColor="#FAFAFA"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Broadcast Matchup Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- Home Side -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/hero_crest_home"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_crest_bruille"
+                                android:gravity="center"
+                                android:letterSpacing="0.04"
+                                android:textColor="#FAFAFA"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/hero_home_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:ellipsize="end"
+                                android:gravity="center"
+                                android:maxLines="2"
+                                android:textColor="#FAFAFA"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Center Score / VS -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="10dp">
+
+                            <TextView
+                                android:id="@+id/hero_center_score"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:text="VS"
+                                android:textColor="#FAFAFA"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/hero_broadcast"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:textColor="#A1A1AA"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+
+                        <!-- Away Side -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/hero_crest_away"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_crest_neutral"
+                                android:gravity="center"
+                                android:letterSpacing="0.04"
+                                android:textColor="#FAFAFA"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/hero_away_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:ellipsize="end"
+                                android:gravity="center"
+                                android:maxLines="2"
+                                android:textColor="#E4E4E7"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- CTA Strip -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/hero_followed"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="#A1A1AA"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_button_accent"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:text="Voir la diffusion →"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <!-- Filter Pills -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
+                    android:layout_marginBottom="12dp"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -155,6 +359,65 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
+
+                <!-- Club Identity Hub Banner -->
+                <LinearLayout
+                    android:id="@+id/club_hub_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_club_banner"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/club_hub_crest"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_crest_bruille"
+                        android:gravity="center"
+                        android:text="BR"
+                        android:textColor="#FAFAFA"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.08"
+                            android:text="PRO A MESSIEURS"
+                            android:textColor="#4ADE80"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/club_hub_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="CTT Bruille"
+                            android:textColor="#FAFAFA"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/club_hub_subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="1 club suivi · 0 match à venir"
+                            android:textColor="#A1A1AA"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -276,16 +539,16 @@
                         android:orientation="horizontal" />
                 </HorizontalScrollView>
 
-                <!-- Tournament Header -->
+                <!-- Tournament Hero Banner -->
                 <LinearLayout
                     android:id="@+id/tournament_header_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:layout_marginBottom="14dp"
-                    android:background="@drawable/bg_surface_card"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_tournament_banner"
                     android:orientation="vertical"
-                    android:padding="14dp"
+                    android:padding="16dp"
                     android:visibility="gone">
 
                     <TextView
@@ -293,8 +556,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:letterSpacing="0.08"
-                        android:text="WTT CHAMPIONS"
-                        android:textColor="#F59E0B"
+                        android:text="WTT FINALS"
+                        android:textColor="#FBBF24"
                         android:textSize="10sp"
                         android:textStyle="bold" />
 
@@ -302,16 +565,16 @@
                         android:id="@+id/tournament_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="3dp"
                         android:textColor="#FAFAFA"
-                        android:textSize="17sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tournament_subtitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="3dp"
                         android:textColor="#A1A1AA"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -369,16 +632,16 @@
         </ScrollView>
     </FrameLayout>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar with active accent indicator -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#1F1F23" />
+        android:background="#1D1D22" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#0F0F12"
+        android:layout_height="62dp"
+        android:background="#0D0D10"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -388,13 +651,20 @@
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
+
+            <View
+                android:id="@+id/nav_matches_indicator"
+                android:layout_width="32dp"
+                android:layout_height="2.5dp"
+                android:background="#E11D48" />
 
             <ImageView
                 android:id="@+id/nav_matches_icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/ic_tab_matches"
                 android:tint="#FAFAFA" />
 
@@ -416,13 +686,21 @@
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
+
+            <View
+                android:id="@+id/nav_clubs_indicator"
+                android:layout_width="32dp"
+                android:layout_height="2.5dp"
+                android:background="#E11D48"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/nav_clubs_icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/ic_tab_clubs"
                 android:tint="#71717A" />
 
@@ -443,13 +721,21 @@
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
+
+            <View
+                android:id="@+id/nav_bracket_indicator"
+                android:layout_width="32dp"
+                android:layout_height="2.5dp"
+                android:background="#E11D48"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/nav_bracket_icon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/ic_tab_bracket"
                 android:tint="#71717A" />
 

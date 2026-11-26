@@ -21,11 +21,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.pingpong.tracker.data.BadgeType
 import com.pingpong.tracker.data.BracketMatch
 import com.pingpong.tracker.data.MatchFormatter
 import com.pingpong.tracker.data.MatchItem
@@ -34,6 +34,7 @@ import com.pingpong.tracker.data.TournamentBracket
 import com.pingpong.tracker.notifications.NotificationHelper
 import com.pingpong.tracker.widget.PingPongWidgetProvider
 import com.pingpong.tracker.worker.WidgetUpdateWorker
+import java.util.Locale
 
 class MainActivity : Activity() {
 
@@ -41,7 +42,7 @@ class MainActivity : Activity() {
     private enum class MatchFilter(val label: String) {
         ALL("Tous"),
         LIVE("En direct"),
-        CLUB("Pro A"),
+        CLUB("Mes clubs"),
         INTL("WTT / Inter"),
     }
 
@@ -62,6 +63,9 @@ class MainActivity : Activity() {
     private lateinit var navMatches: LinearLayout
     private lateinit var navClubs: LinearLayout
     private lateinit var navBracket: LinearLayout
+    private lateinit var navMatchesIndicator: View
+    private lateinit var navClubsIndicator: View
+    private lateinit var navBracketIndicator: View
     private lateinit var navMatchesIcon: ImageView
     private lateinit var navClubsIcon: ImageView
     private lateinit var navBracketIcon: ImageView
@@ -69,12 +73,28 @@ class MainActivity : Activity() {
     private lateinit var navClubsLabel: TextView
     private lateinit var navBracketLabel: TextView
 
+    // Hero card
+    private lateinit var heroMatchCard: View
+    private lateinit var heroKicker: TextView
+    private lateinit var heroVpnBadge: TextView
+    private lateinit var heroCountdown: TextView
+    private lateinit var heroCrestHome: TextView
+    private lateinit var heroHomeName: TextView
+    private lateinit var heroCenterScore: TextView
+    private lateinit var heroBroadcast: TextView
+    private lateinit var heroCrestAway: TextView
+    private lateinit var heroAwayName: TextView
+    private lateinit var heroFollowed: TextView
+
     // Matches tab
     private lateinit var matchesFilterChips: LinearLayout
     private lateinit var matchesEmptyText: TextView
     private lateinit var matchesListContainer: LinearLayout
 
     // Clubs tab
+    private lateinit var clubHubCrest: TextView
+    private lateinit var clubHubTitle: TextView
+    private lateinit var clubHubSubtitle: TextView
     private lateinit var btnAddClub: View
     private lateinit var clubsChipsContainer: LinearLayout
     private lateinit var clubsSectionTitle: TextView
@@ -94,7 +114,7 @@ class MainActivity : Activity() {
 
     private var currentTab: Tab = Tab.MATCHES
     private var currentFilter: MatchFilter = MatchFilter.ALL
-    private var selectedClub: String? = null // null = all followed clubs
+    private var selectedClub: String? = null
     private var selectedTournamentId: String? = null
 
     private val prefsListener =
@@ -150,6 +170,9 @@ class MainActivity : Activity() {
         navMatches = findViewById(R.id.nav_matches)
         navClubs = findViewById(R.id.nav_clubs)
         navBracket = findViewById(R.id.nav_bracket)
+        navMatchesIndicator = findViewById(R.id.nav_matches_indicator)
+        navClubsIndicator = findViewById(R.id.nav_clubs_indicator)
+        navBracketIndicator = findViewById(R.id.nav_bracket_indicator)
         navMatchesIcon = findViewById(R.id.nav_matches_icon)
         navClubsIcon = findViewById(R.id.nav_clubs_icon)
         navBracketIcon = findViewById(R.id.nav_bracket_icon)
@@ -157,10 +180,25 @@ class MainActivity : Activity() {
         navClubsLabel = findViewById(R.id.nav_clubs_label)
         navBracketLabel = findViewById(R.id.nav_bracket_label)
 
+        heroMatchCard = findViewById(R.id.hero_match_card)
+        heroKicker = findViewById(R.id.hero_kicker)
+        heroVpnBadge = findViewById(R.id.hero_vpn_badge)
+        heroCountdown = findViewById(R.id.hero_countdown)
+        heroCrestHome = findViewById(R.id.hero_crest_home)
+        heroHomeName = findViewById(R.id.hero_home_name)
+        heroCenterScore = findViewById(R.id.hero_center_score)
+        heroBroadcast = findViewById(R.id.hero_broadcast)
+        heroCrestAway = findViewById(R.id.hero_crest_away)
+        heroAwayName = findViewById(R.id.hero_away_name)
+        heroFollowed = findViewById(R.id.hero_followed)
+
         matchesFilterChips = findViewById(R.id.matches_filter_chips)
         matchesEmptyText = findViewById(R.id.matches_empty_text)
         matchesListContainer = findViewById(R.id.matches_list_container)
 
+        clubHubCrest = findViewById(R.id.club_hub_crest)
+        clubHubTitle = findViewById(R.id.club_hub_title)
+        clubHubSubtitle = findViewById(R.id.club_hub_subtitle)
         btnAddClub = findViewById(R.id.btn_add_club)
         clubsChipsContainer = findViewById(R.id.clubs_chips_container)
         clubsSectionTitle = findViewById(R.id.clubs_section_title)
@@ -195,12 +233,13 @@ class MainActivity : Activity() {
         tabClubsView.visibility = if (tab == Tab.CLUBS) View.VISIBLE else View.GONE
         tabBracketView.visibility = if (tab == Tab.BRACKET) View.VISIBLE else View.GONE
 
-        updateNavItem(navMatchesIcon, navMatchesLabel, tab == Tab.MATCHES)
-        updateNavItem(navClubsIcon, navClubsLabel, tab == Tab.CLUBS)
-        updateNavItem(navBracketIcon, navBracketLabel, tab == Tab.BRACKET)
+        updateNavItem(navMatchesIndicator, navMatchesIcon, navMatchesLabel, tab == Tab.MATCHES)
+        updateNavItem(navClubsIndicator, navClubsIcon, navClubsLabel, tab == Tab.CLUBS)
+        updateNavItem(navBracketIndicator, navBracketIcon, navBracketLabel, tab == Tab.BRACKET)
     }
 
-    private fun updateNavItem(icon: ImageView, label: TextView, active: Boolean) {
+    private fun updateNavItem(indicator: View, icon: ImageView, label: TextView, active: Boolean) {
+        indicator.visibility = if (active) View.VISIBLE else View.INVISIBLE
         val color = if (active) 0xFFFAFAFA.toInt() else 0xFF71717A.toInt()
         icon.setColorFilter(color)
         label.setTextColor(color)
@@ -212,17 +251,16 @@ class MainActivity : Activity() {
         val allMatches = feed?.let { MatchFormatter.sortMatchesForList(it.matches) }.orEmpty()
         val trackedClubs = store.getTrackedClubs()
 
-        val visibleCount = allMatches.count { match ->
+        val visibleMatches = allMatches.filter { match ->
             !match.isClub || trackedClubs.any { club -> match.matchesClub(club) }
         }
 
-        // Header sync status
         headerSyncStatus.text = if (store.isSyncing()) {
             "Synchronisation..."
         } else {
             val label = feed?.updatedLabel?.takeIf { it.isNotBlank() }
                 ?: MatchFormatter.formatSyncLabel(store.getLastSyncEpochMs())
-            "MAJ $label · $visibleCount matchs"
+            "MAJ $label · ${visibleMatches.size} matchs"
         }
         btnHeaderRefresh.isEnabled = !store.isSyncing()
         btnHeaderRefresh.alpha = if (store.isSyncing()) 0.4f else 1f
@@ -235,45 +273,49 @@ class MainActivity : Activity() {
             bannerError.text = lastError
         }
 
-        renderMatchesTab(allMatches, trackedClubs)
+        renderMatchesTab(visibleMatches, trackedClubs)
         renderClubsTab(allMatches, trackedClubs)
         renderBracketTab(feed?.tournaments.orEmpty(), allMatches, trackedClubs)
     }
 
-    // region TAB 1: MATCHES
-    private fun renderMatchesTab(allMatches: List<MatchItem>, trackedClubs: List<String>) {
-        matchesFilterChips.removeAllViews()
-        for (filter in MatchFilter.entries) {
-            val chip = createPillChip(
-                text = filter.label,
-                active = filter == currentFilter,
-                removable = false,
-                onClick = {
-                    currentFilter = filter
-                    renderMatchesTab(allMatches, trackedClubs)
-                },
-            )
-            matchesFilterChips.addView(chip)
+    // region TAB 1: MATCHES + HERO SPOTLIGHT
+    private fun renderMatchesTab(visibleMatches: List<MatchItem>, trackedClubs: List<String>) {
+        // Spotlight Hero Card (first live or upcoming match)
+        val spotlight = visibleMatches.firstOrNull { it.isLive || it.isScheduled }
+            ?: visibleMatches.firstOrNull()
+        if (spotlight == null) {
+            heroMatchCard.visibility = View.GONE
+        } else {
+            heroMatchCard.visibility = View.VISIBLE
+            bindHeroCard(spotlight, trackedClubs)
         }
 
-        val filtered = allMatches
-            .filter { match ->
-                // Club matches: ONLY show clubs explicitly followed by the user (Bruille + added clubs)
-                !match.isClub || trackedClubs.any { club -> match.matchesClub(club) }
-            }
-            .let { base ->
-                when (currentFilter) {
-                    MatchFilter.ALL -> base
-                    MatchFilter.LIVE -> base.filter { it.isLive }
-                    MatchFilter.CLUB -> base.filter { it.isClub }
-                    MatchFilter.INTL -> base.filter { it.isInternational }
-                }
-            }
+        matchesFilterChips.removeAllViews()
+        for (filter in MatchFilter.entries) {
+            matchesFilterChips.addView(
+                createPillChip(
+                    text = filter.label,
+                    active = filter == currentFilter,
+                    removable = false,
+                    onClick = {
+                        currentFilter = filter
+                        renderMatchesTab(visibleMatches, trackedClubs)
+                    },
+                )
+            )
+        }
+
+        val filtered = when (currentFilter) {
+            MatchFilter.ALL -> visibleMatches
+            MatchFilter.LIVE -> visibleMatches.filter { it.isLive }
+            MatchFilter.CLUB -> visibleMatches.filter { it.isClub }
+            MatchFilter.INTL -> visibleMatches.filter { it.isInternational }
+        }
 
         matchesListContainer.removeAllViews()
         if (filtered.isEmpty()) {
             matchesEmptyText.visibility = View.VISIBLE
-            matchesEmptyText.text = if (allMatches.isEmpty()) {
+            matchesEmptyText.text = if (visibleMatches.isEmpty()) {
                 "Aucun match en cache. Vérifiez l'URL du flux dans les réglages puis actualisez."
             } else {
                 "Aucun match dans cette catégorie pour le moment."
@@ -289,18 +331,43 @@ class MainActivity : Activity() {
             matchesListContainer.addView(card)
         }
     }
+
+    private fun bindHeroCard(match: MatchItem, trackedClubs: List<String>) {
+        heroKicker.text = if (match.isLive) {
+            "EN DIRECT · ${MatchFormatter.formatCompetition(match)}"
+        } else {
+            "À LA UNE · ${MatchFormatter.formatCompetition(match)}"
+        }
+        heroCountdown.text = MatchFormatter.formatCountdown(match)
+
+        if (match.vpnRequired) {
+            heroVpnBadge.visibility = View.VISIBLE
+            heroVpnBadge.text = match.vpnNote.trim().ifEmpty { "VPN" }
+        } else {
+            heroVpnBadge.visibility = View.GONE
+        }
+
+        bindCrest(heroCrestHome, match.home, trackedClubs)
+        bindCrest(heroCrestAway, match.away, trackedClubs)
+        heroHomeName.text = match.home
+        heroAwayName.text = match.away
+        heroCenterScore.text = match.score.trim().ifEmpty { "VS" }
+        heroBroadcast.text = match.broadcast.trim()
+        heroFollowed.text = match.followed.joinToString(" · ")
+
+        heroMatchCard.setOnClickListener {
+            if (match.url.isNotBlank()) openUrl(match.url)
+        }
+    }
     // endregion
 
     // region TAB 2: CLUBS
     private fun renderClubsTab(allMatches: List<MatchItem>, trackedClubs: List<String>) {
-        // Reset selection if removed
         if (selectedClub != null && trackedClubs.none { it.equals(selectedClub, ignoreCase = true) }) {
             selectedClub = null
         }
 
         clubsChipsContainer.removeAllViews()
-
-        // "Tous mes clubs" chip
         clubsChipsContainer.addView(
             createPillChip(
                 text = "Tous (${trackedClubs.size})",
@@ -325,9 +392,7 @@ class MainActivity : Activity() {
                         selectedClub = club
                         renderClubsTab(allMatches, trackedClubs)
                     },
-                    onRemove = {
-                        confirmRemoveClub(club)
-                    },
+                    onRemove = { confirmRemoveClub(club) },
                 )
             )
         }
@@ -337,10 +402,18 @@ class MainActivity : Activity() {
             targetClubs.any { club -> match.matchesClub(club) }
         }
 
+        // Update Club Hub Banner
+        val activeClubName = selectedClub ?: trackedClubs.firstOrNull() ?: "CTT Bruille"
+        bindCrest(clubHubCrest, activeClubName, trackedClubs)
+        clubHubTitle.text = if (selectedClub != null) activeClubName else "Mes clubs Pro A"
+        val upcomingCount = clubMatches.count { !it.isFinished }
+        val matchWord = if (upcomingCount <= 1) "match à venir" else "matchs à venir"
+        clubHubSubtitle.text = "${trackedClubs.size} club(s) suivi(s) · $upcomingCount $matchWord"
+
         clubsSectionTitle.text = if (selectedClub != null) {
-            "MATCHS · ${selectedClub!!.uppercase()}"
+            "CALENDRIER · ${selectedClub!!.uppercase(Locale.FRANCE)}"
         } else {
-            "MATCHS DE MES CLUBS"
+            "CALENDRIER DE MES CLUBS"
         }
 
         clubsMatchesContainer.removeAllViews()
@@ -430,7 +503,7 @@ class MainActivity : Activity() {
     private fun confirmRemoveClub(club: String) {
         AlertDialog.Builder(this)
             .setTitle("Retirer $club ?")
-            .setMessage("Ce club ne sera plus affiché dans vos filtres ni dans le widget.")
+            .setMessage("Ce club ne sera plus affiché dans vos matchs, alertes ni dans le widget.")
             .setPositiveButton("Retirer") { _, _ ->
                 store.removeTrackedClub(club)
                 PingPongWidgetProvider.updateAllWidgets(this)
@@ -475,7 +548,7 @@ class MainActivity : Activity() {
                 )
             }
 
-            tournamentCategory.text = currentTournament.category.uppercase()
+            tournamentCategory.text = currentTournament.category.uppercase(Locale.FRANCE)
             tournamentName.text = currentTournament.name
             tournamentSubtitle.text = listOf(currentTournament.location, currentTournament.dates)
                 .filter { it.isNotBlank() }
@@ -484,7 +557,6 @@ class MainActivity : Activity() {
             renderBracketTree(currentTournament)
         }
 
-        // International matches list below
         val intlMatches = allMatches.filter { it.isInternational }
         intlMatchesContainer.removeAllViews()
         if (intlMatches.isEmpty()) {
@@ -502,7 +574,7 @@ class MainActivity : Activity() {
 
     private fun renderBracketTree(tournament: TournamentBracket) {
         val inflater = LayoutInflater.from(this)
-        val baseSlotDp = 96
+        val baseSlotDp = 98
 
         tournament.rounds.forEachIndexed { roundIndex, round ->
             val col = LinearLayout(this).apply {
@@ -515,9 +587,8 @@ class MainActivity : Activity() {
                 }
             }
 
-            // Round header
             val header = TextView(this).apply {
-                text = round.name.uppercase()
+                text = round.name.uppercase(Locale.FRANCE)
                 setTextColor(0xFF71717A.toInt())
                 textSize = 10f
                 letterSpacing = 0.08f
@@ -542,7 +613,6 @@ class MainActivity : Activity() {
                 bindBracketMatchCard(card, bm)
                 slot.addView(card)
 
-                // Subtle connector line to next round
                 if (roundIndex < tournament.rounds.lastIndex) {
                     val connector = View(this).apply {
                         setBackgroundColor(0xFF27272A.toInt())
@@ -584,7 +654,6 @@ class MainActivity : Activity() {
         score1.text = bm.score1.ifBlank { "-" }
         score2.text = bm.score2.ifBlank { "-" }
 
-        // Highlight winner vs loser
         val p1Bold = bm.winner == 1 || bm.highlight1
         val p2Bold = bm.winner == 2 || bm.highlight2
         player1.setTypeface(null, if (p1Bold) Typeface.BOLD else Typeface.NORMAL)
@@ -606,18 +675,18 @@ class MainActivity : Activity() {
         score2.setTextColor(if (bm.winner == 2) 0xFF22C55E.toInt() else p2Color)
 
         card.setOnClickListener {
-            if (bm.url.isNotBlank()) {
-                openUrl(bm.url)
-            }
+            if (bm.url.isNotBlank()) openUrl(bm.url)
         }
     }
     // endregion
 
-    // region SHARED CARD & CHIP HELPERS
+    // region SHARED CARD, CREST & CHIP HELPERS
     private fun bindMatchCard(card: View, match: MatchItem, trackedClubs: List<String>) {
         val accentBar = card.findViewById<View>(R.id.item_accent_bar)
         val compView = card.findViewById<TextView>(R.id.item_comp)
         val countdownView = card.findViewById<TextView>(R.id.item_countdown)
+        val crestHome = card.findViewById<TextView>(R.id.item_crest_home)
+        val crestAway = card.findViewById<TextView>(R.id.item_crest_away)
         val homeView = card.findViewById<TextView>(R.id.item_home)
         val awayView = card.findViewById<TextView>(R.id.item_away)
         val scoreHomeView = card.findViewById<TextView>(R.id.item_score_home)
@@ -641,6 +710,8 @@ class MainActivity : Activity() {
             )
         }
 
+        bindCrest(crestHome, match.home, trackedClubs)
+        bindCrest(crestAway, match.away, trackedClubs)
         homeView.text = match.home
         awayView.text = match.away
 
@@ -677,9 +748,43 @@ class MainActivity : Activity() {
         }
 
         card.setOnClickListener {
-            if (match.url.isNotBlank()) {
-                openUrl(match.url)
-            }
+            if (match.url.isNotBlank()) openUrl(match.url)
+        }
+    }
+
+    private fun bindCrest(view: TextView, name: String, trackedClubs: List<String>) {
+        view.text = monogramFor(name)
+        val lowered = name.lowercase(Locale.FRANCE)
+        val bgRes = when {
+            lowered.contains("bruille") ||
+                trackedClubs.any { lowered.contains(it.lowercase(Locale.FRANCE)) } ->
+                R.drawable.bg_crest_bruille
+            lowered.contains("lebrun") ||
+                lowered.contains("coton") ||
+                lowered.contains("poret") ||
+                lowered.contains("gauzy") ->
+                R.drawable.bg_crest_france
+            else -> R.drawable.bg_crest_neutral
+        }
+        view.setBackgroundResource(bgRes)
+    }
+
+    private fun monogramFor(name: String): String {
+        val cleaned = name.trim()
+            .replace("CTT ", "", ignoreCase = true)
+            .replace("SPO ", "", ignoreCase = true)
+            .replace("AS ", "", ignoreCase = true)
+            .replace("GV ", "", ignoreCase = true)
+            .replace("SS ", "", ignoreCase = true)
+            .replace("Alliance ", "", ignoreCase = true)
+            .replace("Les Loups d'", "", ignoreCase = true)
+            .trim()
+        val words = cleaned.split(Regex("[\\s/\\-&]+")).filter { it.isNotBlank() }
+        return when {
+            words.size >= 2 -> "${words[0][0]}${words[1][0]}".uppercase(Locale.FRANCE)
+            cleaned.length >= 2 -> cleaned.substring(0, 2).uppercase(Locale.FRANCE)
+            cleaned.isNotEmpty() -> cleaned.uppercase(Locale.FRANCE)
+            else -> "TT"
         }
     }
 
@@ -731,10 +836,28 @@ class MainActivity : Activity() {
     private fun showSettingsDialog() {
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
         val statusText = view.findViewById<TextView>(R.id.settings_status)
+        val switch30m = view.findViewById<Switch>(R.id.switch_notif_30m)
+        val switchLive = view.findViewById<Switch>(R.id.switch_notif_live)
+        val switchClubs = view.findViewById<Switch>(R.id.switch_notif_clubs)
+        val switchIntl = view.findViewById<Switch>(R.id.switch_notif_intl)
+        val switchVpn = view.findViewById<Switch>(R.id.switch_notif_vpn)
+        val btnTestNotif = view.findViewById<Button>(R.id.settings_btn_test_notif)
         val inputUrl = view.findViewById<EditText>(R.id.settings_input_url)
         val btnSave = view.findViewById<Button>(R.id.settings_btn_save_url)
         val btnPin = view.findViewById<Button>(R.id.settings_btn_pin_widget)
         val btnBattery = view.findViewById<Button>(R.id.settings_btn_battery)
+
+        switch30m.isChecked = store.isNotif30mEnabled()
+        switchLive.isChecked = store.isNotifLiveEnabled()
+        switchClubs.isChecked = store.isNotifClubsEnabled()
+        switchIntl.isChecked = store.isNotifIntlEnabled()
+        switchVpn.isChecked = store.isNotifVpnHintEnabled()
+
+        switch30m.setOnCheckedChangeListener { _, checked -> store.setNotif30mEnabled(checked) }
+        switchLive.setOnCheckedChangeListener { _, checked -> store.setNotifLiveEnabled(checked) }
+        switchClubs.setOnCheckedChangeListener { _, checked -> store.setNotifClubsEnabled(checked) }
+        switchIntl.setOnCheckedChangeListener { _, checked -> store.setNotifIntlEnabled(checked) }
+        switchVpn.setOnCheckedChangeListener { _, checked -> store.setNotifVpnHintEnabled(checked) }
 
         inputUrl.setText(store.getFeedUrl())
         val lastSync = MatchFormatter.formatSyncLabel(store.getLastSyncEpochMs())
@@ -748,6 +871,20 @@ class MainActivity : Activity() {
         val dialog = AlertDialog.Builder(this)
             .setView(view)
             .create()
+
+        btnTestNotif.setOnClickListener {
+            val sent = NotificationHelper.sendTestNotification(this, store)
+            if (sent) {
+                Toast.makeText(this, "Notification de test envoyée !", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Autorisez d'abord les notifications Android.",
+                    Toast.LENGTH_SHORT,
+                ).show()
+                requestNotificationPermissionIfNeeded()
+            }
+        }
 
         btnSave.setOnClickListener {
             val newUrl = inputUrl.text.toString().trim()
@@ -797,9 +934,7 @@ class MainActivity : Activity() {
         val provider = ComponentName(this, PingPongWidgetProvider::class.java)
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
             val accepted = appWidgetManager.requestPinAppWidget(provider, null, null)
-            if (!accepted) {
-                showManualPinHelpDialog()
-            }
+            if (!accepted) showManualPinHelpDialog()
         } else {
             showManualPinHelpDialog()
         }
