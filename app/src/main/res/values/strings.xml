@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PingPong Tracker</string>
+    <string name="widget_title">PING TRACKER · FRA &amp; CLUBS</string>
+    <string name="widget_description">Suivi en temps réel des matchs Pro A (CTT Bruille et clubs suivis) et WTT/ITTF.</string>
+    <string name="widget_syncing">Sync...</string>
+    <string name="widget_empty_no_matches">Aucun match prévu pour le moment.</string>
+    <string name="widget_empty_offline">Réseau indisponible. Appuyez sur ↻ pour réessayer.</string>
+    <string name="notif_channel_name">Alertes matchs PingPong</string>
+    <string name="notif_channel_desc">Rappels H-30 et coup d\'envoi pour les joueurs et clubs suivis.</string>
+</resources>

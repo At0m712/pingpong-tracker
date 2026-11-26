@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="196dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bracket_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="8dp">
+
+    <!-- Optional Live & VPN indicators -->
+    <LinearLayout
+        android:id="@+id/bm_tags_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/bm_live_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:letterSpacing="0.08"
+            android:text="EN DIRECT"
+            android:textColor="#E11D48"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/bm_vpn_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_vpn_pill"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="1dp"
+            android:text="VPN"
+            android:textColor="#FBBF24"
+            android:textSize="8sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Player 1 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/bm_dot_1"
+            android:layout_width="3dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="6dp"
+            android:background="#E11D48"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/bm_country_1"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textColor="#71717A"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/bm_player_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#FAFAFA"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/bm_score_1"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:gravity="end"
+            android:textColor="#FAFAFA"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="5dp"
+        android:background="#222227" />
+
+    <!-- Player 2 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/bm_dot_2"
+            android:layout_width="3dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="6dp"
+            android:background="#E11D48"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/bm_country_2"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textColor="#71717A"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/bm_player_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#D4D4D8"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/bm_score_2"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:gravity="end"
+            android:textColor="#D4D4D8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

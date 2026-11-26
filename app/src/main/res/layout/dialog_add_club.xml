@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#131316"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:letterSpacing="0.06"
+        android:text="AJOUTER UN CLUB"
+        android:textColor="#FAFAFA"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Saisissez un nom de club ou choisissez parmi les clubs Pro A."
+        android:textColor="#A1A1AA"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/add_club_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_input_dark"
+        android:hint="Ex. GV Hennebont, SPO Rouen..."
+        android:inputType="textCapWords"
+        android:maxLines="1"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp"
+        android:textColor="#FAFAFA"
+        android:textColorHint="#52525B"
+        android:textSize="13sp" />
+
+    <Button
+        android:id="@+id/add_club_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_accent"
+        android:text="Ajouter ce club"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:letterSpacing="0.06"
+        android:text="SUGGESTIONS PRO A"
+        android:textColor="#71717A"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+        <LinearLayout
+            android:id="@+id/add_club_suggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+</LinearLayout>

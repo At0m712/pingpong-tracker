@@ -1,0 +1,274 @@
+{
+  "matches": [
+    {
+      "id": "fftt_pro_a_j7_bruille_rouen",
+      "category": "CLUB",
+      "competition": "Pro A Messieurs · J7",
+      "home": "CTT Bruille",
+      "away": "SPO Rouen",
+      "start_iso": "2026-11-26T19:30:00+01:00",
+      "status": "scheduled",
+      "score": "",
+      "followed": ["CTT Bruille · Flavien Coton", "Thibault Poret"],
+      "broadcast": "YouTube FFTT",
+      "url": "https://www.youtube.com/@FFTT_Officiel/streams",
+      "vpn_required": false,
+      "vpn_note": ""
+    },
+    {
+      "id": "fftt_pro_a_j7_nimes_pontoise",
+      "category": "CLUB",
+      "competition": "Pro A Messieurs · J7",
+      "home": "Alliance Nîmes",
+      "away": "AS Pontoise-Cergy",
+      "start_iso": "2026-11-27T19:00:00+01:00",
+      "status": "scheduled",
+      "score": "",
+      "followed": ["Simon Gauzy"],
+      "broadcast": "YouTube FFTT",
+      "url": "https://www.youtube.com/@FFTT_Officiel/streams",
+      "vpn_required": false,
+      "vpn_note": ""
+    },
+    {
+      "id": "fftt_pro_a_j7_hennebont_morez",
+      "category": "CLUB",
+      "competition": "Pro A Messieurs · J7",
+      "home": "GV Hennebont",
+      "away": "Morez Haut-Jura",
+      "start_iso": "2026-11-27T19:30:00+01:00",
+      "status": "scheduled",
+      "score": "",
+      "followed": ["Pro A"],
+      "broadcast": "YouTube FFTT",
+      "url": "https://www.youtube.com/@FFTT_Officiel/streams",
+      "vpn_required": false,
+      "vpn_note": ""
+    },
+    {
+      "id": "wtt_champions_flebrun_lin",
+      "category": "INTL",
+      "competition": "WTT Champions · 1/2",
+      "home": "Félix Lebrun",
+      "away": "Lin Shidong",
+      "start_iso": "2026-11-28T18:00:00+01:00",
+      "status": "scheduled",
+      "score": "",
+      "followed": ["Félix Lebrun"],
+      "broadcast": "YouTube WTT",
+      "url": "https://www.youtube.com/@WTTGlobal/streams",
+      "vpn_required": false,
+      "vpn_note": ""
+    },
+    {
+      "id": "wtt_star_goa_alebrun_moregardh",
+      "category": "INTL",
+      "competition": "WTT Star Contender Goa · 1/2",
+      "home": "Alexis Lebrun",
+      "away": "Truls Möregårdh",
+      "start_iso": "2026-11-29T15:30:00+01:00",
+      "status": "scheduled",
+      "score": "",
+      "followed": ["Alexis Lebrun"],
+      "broadcast": "YouTube WTT",
+      "url": "https://www.youtube.com/@WTTGlobal/streams",
+      "vpn_required": true,
+      "vpn_note": "VPN requis (Inde)"
+    }
+  ],
+  "tournaments": [
+    {
+      "id": "wtt_champions_montpellier_2026",
+      "name": "WTT Champions Montpellier",
+      "location": "Sud de France Arena, Montpellier",
+      "dates": "24 – 29 nov. 2026",
+      "category": "WTT CHAMPIONS · SIMPLE MESSIEURS",
+      "rounds": [
+        {
+          "name": "Quarts de finale",
+          "matches": [
+            {
+              "id": "qf1",
+              "player1": "Félix Lebrun",
+              "country1": "FRA",
+              "score1": "3",
+              "player2": "Hugo Calderano",
+              "country2": "BRA",
+              "score2": "1",
+              "status": "finished",
+              "winner": 1,
+              "highlight1": true,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": false
+            },
+            {
+              "id": "qf2",
+              "player1": "Lin Shidong",
+              "country1": "CHN",
+              "score1": "3",
+              "player2": "Simon Gauzy",
+              "country2": "FRA",
+              "score2": "2",
+              "status": "finished",
+              "winner": 1,
+              "highlight1": false,
+              "highlight2": true,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": false
+            },
+            {
+              "id": "qf3",
+              "player1": "Alexis Lebrun",
+              "country1": "FRA",
+              "score1": "3",
+              "player2": "T. Harimoto",
+              "country2": "JPN",
+              "score2": "1",
+              "status": "finished",
+              "winner": 1,
+              "highlight1": true,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": false
+            },
+            {
+              "id": "qf4",
+              "player1": "T. Möregårdh",
+              "country1": "SWE",
+              "score1": "3",
+              "player2": "Wang Chuqin",
+              "country2": "CHN",
+              "score2": "2",
+              "status": "finished",
+              "winner": 1,
+              "highlight1": false,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": false
+            }
+          ]
+        },
+        {
+          "name": "Demi-finales",
+          "matches": [
+            {
+              "id": "sf1",
+              "player1": "Félix Lebrun",
+              "country1": "FRA",
+              "score1": "",
+              "player2": "Lin Shidong",
+              "country2": "CHN",
+              "score2": "",
+              "status": "scheduled",
+              "winner": 0,
+              "highlight1": true,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": false
+            },
+            {
+              "id": "sf2",
+              "player1": "Alexis Lebrun",
+              "country1": "FRA",
+              "score1": "",
+              "player2": "T. Möregårdh",
+              "country2": "SWE",
+              "score2": "",
+              "status": "scheduled",
+              "winner": 0,
+              "highlight1": true,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": false
+            }
+          ]
+        },
+        {
+          "name": "Finale",
+          "matches": [
+            {
+              "id": "f1",
+              "player1": "Vainqueur DF 1",
+              "country1": "",
+              "score1": "",
+              "player2": "Vainqueur DF 2",
+              "country2": "",
+              "score2": "",
+              "status": "scheduled",
+              "winner": 0,
+              "highlight1": false,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wtt_star_contender_goa_2026",
+      "name": "WTT Star Contender Goa",
+      "location": "Peddem Indoor Stadium, Inde",
+      "dates": "2 – 6 déc. 2026",
+      "category": "WTT STAR CONTENDER · VPN CONSEILLÉ (YT)",
+      "rounds": [
+        {
+          "name": "Demi-finales",
+          "matches": [
+            {
+              "id": "d_sf1",
+              "player1": "Flavien Coton",
+              "country1": "FRA",
+              "score1": "",
+              "player2": "Sora Matsushima",
+              "country2": "JPN",
+              "score2": "",
+              "status": "scheduled",
+              "winner": 0,
+              "highlight1": true,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": true
+            },
+            {
+              "id": "d_sf2",
+              "player1": "Thibault Poret",
+              "country1": "FRA",
+              "score1": "",
+              "player2": "Darko Jorgić",
+              "country2": "SLO",
+              "score2": "",
+              "status": "scheduled",
+              "winner": 0,
+              "highlight1": true,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": true
+            }
+          ]
+        },
+        {
+          "name": "Finale",
+          "matches": [
+            {
+              "id": "d_f1",
+              "player1": "Vainqueur DF 1",
+              "country1": "",
+              "score1": "",
+              "player2": "Vainqueur DF 2",
+              "country2": "",
+              "score2": "",
+              "status": "scheduled",
+              "winner": 0,
+              "highlight1": false,
+              "highlight2": false,
+              "url": "https://www.youtube.com/@WTTGlobal/streams",
+              "vpn_required": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
