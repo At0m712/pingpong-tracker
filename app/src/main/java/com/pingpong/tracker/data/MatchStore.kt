@@ -135,7 +135,7 @@ class MatchStore(context: Context) {
 
     companion object {
         const val DEFAULT_FEED_URL =
-            "https://TON_PSEUDO.github.io/pingpong-tracker/matches.json"
+            "https://at0m712.github.io/pingpong-tracker/matches.json"
 
         val DEFAULT_CLUBS = listOf("CTT Bruille")
 
