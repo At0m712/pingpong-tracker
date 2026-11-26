@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """
-PingPong Tracker — Backend generator for matches.json (GitHub Pages).
-Fetches WTT / ITTF international matches & tournament brackets + FFTT Pro A Messieurs,
-merges optional manual_matches.json overrides, and writes a clean matches.json.
-Uses Python 3 standard library only (zero pip dependencies).
+PingPong Tracker — Automatic backend generator for matches.json (GitHub Pages).
+
+Sources (all 100% free, zero API keys):
+1. YouTube Live & Upcoming streams from @FFTT_Officiel and @WTTGlobal (ytInitialData).
+2. World Table Tennis (worldtabletennis.com) via Playwright headless Chromium,
+   intercepting official WTT JSON API responses for live scores, schedules & draws.
+3. Optional Pro A calendar / overrides in backend/manual_matches.json.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import sys
 import urllib.error
 import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -40,18 +42,30 @@ TRACKED_CLUB = "CTT Bruille"
 
 PRO_A_CLUBS = [
     "CTT Bruille",
+    "Bruille",
     "SPO Rouen",
+    "Rouen",
     "AS Pontoise-Cergy",
+    "Pontoise",
     "Alliance Nîmes",
+    "Nîmes",
+    "Montpellier",
     "GV Hennebont",
+    "Hennebont",
     "Morez Haut-Jura",
+    "Morez",
     "Les Loups d'Angers",
+    "Angers",
     "C'Chartres TT",
-    "Saint-Denis US 93",
+    "Chartres",
+    "Saint-Denis",
     "Thorigné-Fouillard",
+    "Thorigné",
+    "Roanne",
+    "La Romagne",
 ]
 
-# Regions / events frequently geo-blocked in France on WTT YouTube
+# Regions / WTT events frequently geo-blocked in France on YouTube
 VPN_KEYWORDS = [
     "india",
     "inde",
@@ -69,36 +83,30 @@ VPN_KEYWORDS = [
     "incheon",
     "busan",
     "doha",
+    "hong kong",
+    "wtt finals",
+    "wtt champions",
+    "wtt star contender",
 ]
 
 YOUTUBE_WTT = "https://www.youtube.com/@WTTGlobal/streams"
 YOUTUBE_FFTT = "https://www.youtube.com/@FFTT_Officiel/streams"
 
-USER_AGENT = "Mozilla/5.0 (compatible; PingPongTrackerBot/1.0)"
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+)
 
 
-def http_get_json(url: str, timeout: int = 12) -> object | None:
-    req = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": USER_AGENT,
-            "Accept": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            raw = resp.read().decode("utf-8", errors="replace")
-            return json.loads(raw)
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
-        print(f"[warn] GET {url} failed: {exc}", file=sys.stderr)
-        return None
+def slugify(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")[:52]
 
 
 def detect_vpn(text: str) -> tuple[bool, str]:
     lowered = text.lower()
     for kw in VPN_KEYWORDS:
         if kw in lowered:
-            return True, "VPN conseillé (géo-bloqué FR)"
+            return True, "VPN conseillé (YouTube FR)"
     return False, ""
 
 
@@ -107,158 +115,333 @@ def is_tracked_player(name: str) -> bool:
     return any(k in lowered for k in TRACKED_PLAYER_KEYS)
 
 
-def matched_players(home: str, away: str) -> list[str]:
+def matched_players(text: str) -> list[str]:
     found: list[str] = []
-    combined = f"{home} {away}".lower()
+    combined = text.lower()
     for full_name in TRACKED_PLAYERS:
         last_name = full_name.split()[-1].lower()
-        first_initial = full_name.split()[0].lower()
         if last_name == "lebrun":
-            if "félix" in combined or "felix" in combined or "f. lebrun" in combined:
+            if "félix" in combined or "felix" in combined or "f. lebrun" in combined or "lebrun f" in combined:
                 if "Félix Lebrun" not in found:
                     found.append("Félix Lebrun")
-            if "alexis" in combined or "a. lebrun" in combined:
+            if "alexis" in combined or "a. lebrun" in combined or "lebrun a" in combined:
                 if "Alexis Lebrun" not in found:
                     found.append("Alexis Lebrun")
-        elif last_name in combined or first_initial in combined:
+            if "lebrun" in combined and "Félix Lebrun" not in found and "Alexis Lebrun" not in found:
+                found.append("Lebrun")
+        elif last_name in combined:
             if full_name not in found:
                 found.append(full_name)
     return found
 
 
-def slugify(text: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")[:48]
+def matched_clubs(text: str) -> list[str]:
+    lowered = text.lower()
+    found: list[str] = []
+    for club in PRO_A_CLUBS:
+        if club.lower() in lowered:
+            if club == "Bruille":
+                club = "CTT Bruille"
+            if club not in found:
+                found.append(club)
+    return found
 
 
-def fetch_wtt_events_and_matches(now_paris: datetime) -> tuple[list[dict], list[dict]]:
-    """
-    Attempts to fetch current/upcoming WTT events & matches from public WTT feeds.
-    Returns (matches, tournaments). Fails gracefully with empty lists if unavailable.
-    """
-    matches: list[dict] = []
-    tournaments: list[dict] = []
+# ---------------------------------------------------------------------------
+# Source 1: YouTube Live & Upcoming Streams (@FFTT_Officiel & @WTTGlobal)
+# ---------------------------------------------------------------------------
 
-    # Public WTT events calendar feed
-    events_url = "https://wttsimfiles.blob.core.windows.net/wtt-media/events/events_list.json"
-    data = http_get_json(events_url, timeout=10)
-    if not isinstance(data, list):
-        return matches, tournaments
+def _walk_video_renderers(node: object, out: list[dict]) -> None:
+    if isinstance(node, dict):
+        if "videoRenderer" in node and isinstance(node["videoRenderer"], dict):
+            out.append(node["videoRenderer"])
+        for v in node.values():
+            _walk_video_renderers(v, out)
+    elif isinstance(node, list):
+        for item in node:
+            _walk_video_renderers(item, out)
 
-    window_start = now_paris - timedelta(days=3)
-    window_end = now_paris + timedelta(days=21)
 
-    active_events: list[dict] = []
-    for ev in data:
-        if not isinstance(ev, dict):
+def _extract_yt_text(obj: object) -> str:
+    if isinstance(obj, str):
+        return obj
+    if isinstance(obj, dict):
+        if "simpleText" in obj:
+            return str(obj["simpleText"])
+        if "runs" in obj and isinstance(obj["runs"], list):
+            return "".join(str(r.get("text", "")) for r in obj["runs"] if isinstance(r, dict))
+    return ""
+
+
+def fetch_youtube_channel_streams(
+    channel_url: str,
+    category: str,
+    broadcast_label: str,
+    now_paris: datetime,
+) -> list[dict]:
+    req = urllib.request.Request(
+        channel_url,
+        headers={
+            "User-Agent": USER_AGENT,
+            "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+            "Cookie": "CONSENT=YES+cb.20210328-17-p0.fr+FX+111",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            html = resp.read().decode("utf-8", errors="replace")
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        print(f"[warn] YouTube fetch failed ({channel_url}): {exc}", file=sys.stderr)
+        return []
+
+    m = re.search(r"var ytInitialData\s*=\s*(\{.*?\});</script>", html, re.DOTALL)
+    if not m:
+        print(f"[warn] ytInitialData not found on {channel_url}", file=sys.stderr)
+        return []
+
+    try:
+        data = json.loads(m.group(1))
+    except json.JSONDecodeError:
+        return []
+
+    renderers: list[dict] = []
+    _walk_video_renderers(data, renderers)
+
+    results: list[dict] = []
+    for vr in renderers[:25]:
+        video_id = str(vr.get("videoId") or "").strip()
+        title = _extract_yt_text(vr.get("title")).strip()
+        if not video_id or not title:
             continue
-        start_raw = ev.get("StartDateTime") or ev.get("startDate") or ""
-        end_raw = ev.get("EndDateTime") or ev.get("endDate") or start_raw
+
+        # Determine LIVE vs UPCOMING
+        is_live = False
+        for badge in vr.get("badges", []) or []:
+            style = (
+                badge.get("metadataBadgeRenderer", {}).get("style", "")
+                if isinstance(badge, dict)
+                else ""
+            )
+            if "LIVE" in str(style).upper():
+                is_live = True
+        for ov in vr.get("thumbnailOverlays", []) or []:
+            style = (
+                ov.get("thumbnailOverlayTimeStatusRenderer", {}).get("style", "")
+                if isinstance(ov, dict)
+                else ""
+            )
+            if str(style).upper() == "LIVE":
+                is_live = True
+
+        upcoming = vr.get("upcomingEventData")
+        start_dt: datetime | None = None
+        if isinstance(upcoming, dict) and upcoming.get("startTime"):
+            try:
+                start_dt = datetime.fromtimestamp(int(upcoming["startTime"]), tz=PARIS_TZ)
+            except (ValueError, TypeError):
+                start_dt = None
+
+        if not is_live and start_dt is None:
+            continue  # Skip already-finished VODs
+
+        players = matched_players(title)
+        clubs = matched_clubs(title)
+
+        # For WTT, keep only streams featuring tracked players or major live tables
+        if category == "INTL" and not players and not is_live:
+            continue
+        # For FFTT, keep Pro A / tracked clubs / tracked players
+        if category == "CLUB" and not clubs and not players and "pro a" not in title.lower():
+            continue
+
+        status = "live" if is_live else "scheduled"
+        start_iso = (start_dt or now_paris).isoformat(timespec="seconds")
+
+        # Try splitting "Team A vs Team B" or "Team A - Team B"
+        home, away = title, ""
+        sep_match = re.split(r"\s+(?:vs\.?|v\.?|-|–|/)\s+", title, maxsplit=1, flags=re.IGNORECASE)
+        if len(sep_match) == 2 and len(sep_match[0]) <= 45 and len(sep_match[1]) <= 45:
+            home, away = sep_match[0].strip(), sep_match[1].strip()
+        else:
+            away = broadcast_label
+
+        followed = players + [c for c in clubs if c not in players]
+        if not followed:
+            followed = ["Pro A" if category == "CLUB" else "WTT Live"]
+
+        vpn_req, vpn_note = (detect_vpn(title) if category == "INTL" else (False, ""))
+        comp = "Pro A · Live YouTube" if category == "CLUB" else "WTT · Live YouTube"
+
+        results.append(
+            {
+                "id": f"yt_{video_id}",
+                "category": category,
+                "competition": comp,
+                "home": home[:64],
+                "away": away[:64],
+                "start_iso": start_iso,
+                "status": status,
+                "score": "",
+                "followed": followed[:3],
+                "broadcast": broadcast_label,
+                "url": f"https://www.youtube.com/watch?v={video_id}",
+                "vpn_required": vpn_req,
+                "vpn_note": vpn_note,
+            }
+        )
+
+    print(f"[ok] YouTube {broadcast_label}: {len(results)} live/upcoming streams found")
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Source 2: World Table Tennis via Playwright (network JSON interception)
+# ---------------------------------------------------------------------------
+
+def _parse_wtt_match_object(m: dict, event_name: str, vpn_req: bool, vpn_note: str, now_paris: datetime) -> dict | None:
+    if not isinstance(m, dict):
+        return None
+    # WTT JSON schemas vary slightly across endpoints; handle common field names
+    p1 = (
+        m.get("homePlayerName")
+        or m.get("player1Name")
+        or m.get("competitor1Name")
+        or (m.get("competitors", [{}])[0].get("competitorName") if isinstance(m.get("competitors"), list) and len(m.get("competitors", [])) >= 2 else "")
+        or ""
+    )
+    p2 = (
+        m.get("awayPlayerName")
+        or m.get("player2Name")
+        or m.get("competitor2Name")
+        or (m.get("competitors", [{}, {}])[1].get("competitorName") if isinstance(m.get("competitors"), list) and len(m.get("competitors", [])) >= 2 else "")
+        or ""
+    )
+    p1, p2 = str(p1).strip(), str(p2).strip()
+    if not p1 or not p2:
+        return None
+
+    players = matched_players(f"{p1} {p2}")
+    if not players:
+        return None
+
+    raw_status = str(m.get("matchStatus") or m.get("status") or m.get("resultStatus") or "").lower()
+    if any(k in raw_status for k in ("live", "running", "inprogress", "in_progress", "playing")):
+        status = "live"
+    elif any(k in raw_status for k in ("official", "finished", "complete", "ended")):
+        status = "finished"
+    else:
+        status = "scheduled"
+
+    s1 = str(m.get("homeScore") or m.get("score1") or m.get("overallScore1") or "").strip()
+    s2 = str(m.get("awayScore") or m.get("score2") or m.get("overallScore2") or "").strip()
+    score = f"{s1} - {s2}" if s1 and s2 else str(m.get("overallScores") or "").strip()
+
+    raw_time = str(m.get("matchDateTime") or m.get("startTime") or m.get("scheduledTime") or "").strip()
+    start_iso = now_paris.isoformat(timespec="seconds")
+    if raw_time:
         try:
-            ev_start = datetime.fromisoformat(str(start_raw).replace("Z", "+00:00")).astimezone(PARIS_TZ)
-            ev_end = datetime.fromisoformat(str(end_raw).replace("Z", "+00:00")).astimezone(PARIS_TZ)
+            dt = datetime.fromisoformat(raw_time.replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=PARIS_TZ)
+            start_iso = dt.astimezone(PARIS_TZ).isoformat(timespec="seconds")
         except ValueError:
-            continue
-        if ev_end >= window_start and ev_start <= window_end:
-            active_events.append(ev)
+            pass
 
-    for ev in active_events[:4]:
-        ev_id = str(ev.get("EventId") or ev.get("id") or "")
-        ev_name = str(ev.get("EventName") or ev.get("name") or "WTT Event").strip()
-        city = str(ev.get("City") or "").strip()
-        country = str(ev.get("Country") or "").strip()
-        location = ", ".join(p for p in [city, country] if p)
-        vpn_req, vpn_note = detect_vpn(f"{ev_name} {location}")
+    round_name = str(m.get("subEventDescription") or m.get("roundName") or m.get("phaseName") or "").strip()
+    comp = f"{event_name} · {round_name}" if round_name else event_name
+    match_id = str(m.get("documentCode") or m.get("matchId") or f"wtt_{slugify(comp)}_{slugify(p1)}_{slugify(p2)}")
 
-        if not ev_id:
-            continue
+    return {
+        "id": f"wtt_{slugify(match_id)}",
+        "category": "INTL",
+        "competition": comp[:60],
+        "home": p1,
+        "away": p2,
+        "start_iso": start_iso,
+        "status": status,
+        "score": score,
+        "followed": players,
+        "broadcast": "YouTube WTT",
+        "url": YOUTUBE_WTT,
+        "vpn_required": vpn_req,
+        "vpn_note": vpn_note,
+    }
 
-        # Attempt to fetch match list for this event
-        matches_url = f"https://wttsimfiles.blob.core.windows.net/wtt-media/events/{ev_id}/matches.json"
-        m_data = http_get_json(matches_url, timeout=10)
-        if not isinstance(m_data, list):
-            continue
 
-        rounds_map: dict[str, list[dict]] = {}
-        for m in m_data:
-            if not isinstance(m, dict):
-                continue
-            p1 = str(m.get("player1") or m.get("home") or "").strip()
-            p2 = str(m.get("player2") or m.get("away") or "").strip()
-            if not p1 or not p2:
-                continue
+def _collect_match_dicts(payload: object, out: list[dict]) -> None:
+    if isinstance(payload, dict):
+        keys = set(payload.keys())
+        if (
+            {"homePlayerName", "awayPlayerName"} <= keys
+            or {"player1Name", "player2Name"} <= keys
+            or {"competitor1Name", "competitor2Name"} <= keys
+            or ("competitors" in keys and isinstance(payload.get("competitors"), list))
+        ):
+            out.append(payload)
+        for v in payload.values():
+            _collect_match_dicts(v, out)
+    elif isinstance(payload, list):
+        for item in payload:
+            _collect_match_dicts(item, out)
 
-            status_raw = str(m.get("status") or "scheduled").lower()
-            status = (
-                "live"
-                if "live" in status_raw or "progress" in status_raw
-                else "finished"
-                if "finish" in status_raw or "complete" in status_raw
-                else "scheduled"
-            )
-            score = str(m.get("score") or "").strip()
-            round_name = str(m.get("round") or "Tableau").strip()
-            start_iso = str(m.get("start_iso") or now_paris.isoformat())
 
-            followed = matched_players(p1, p2)
-            if followed:
-                matches.append(
-                    {
-                        "id": f"wtt_{ev_id}_{slugify(p1)}_{slugify(p2)}",
-                        "category": "INTL",
-                        "competition": f"{ev_name} · {round_name}",
-                        "home": p1,
-                        "away": p2,
-                        "start_iso": start_iso,
-                        "status": status,
-                        "score": score,
-                        "followed": followed,
-                        "broadcast": "YouTube WTT",
-                        "url": YOUTUBE_WTT,
-                        "vpn_required": vpn_req,
-                        "vpn_note": vpn_note,
-                    }
-                )
+def fetch_wtt_via_playwright(now_paris: datetime) -> list[dict]:
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print("[info] Playwright not installed; skipping WTT browser scrape", file=sys.stderr)
+        return []
 
-            if round_name.lower() in {"qf", "quarterfinal", "quarts de finale", "sf", "semifinal", "demi-finales", "f", "final", "finale"}:
-                s1, s2 = "", ""
-                if "-" in score:
-                    parts = [x.strip() for x in score.split("-", 1)]
-                    s1, s2 = parts[0], parts[1]
-                winner = 0
-                if status == "finished" and s1.isdigit() and s2.isdigit():
-                    winner = 1 if int(s1) > int(s2) else (2 if int(s2) > int(s1) else 0)
-                rounds_map.setdefault(round_name, []).append(
-                    {
-                        "id": f"bm_{ev_id}_{slugify(p1)}_{slugify(p2)}",
-                        "player1": p1,
-                        "country1": str(m.get("country1") or ""),
-                        "score1": s1,
-                        "player2": p2,
-                        "country2": str(m.get("country2") or ""),
-                        "score2": s2,
-                        "status": status,
-                        "winner": winner,
-                        "highlight1": is_tracked_player(p1),
-                        "highlight2": is_tracked_player(p2),
-                        "url": YOUTUBE_WTT,
-                        "vpn_required": vpn_req,
-                    }
-                )
+    captured_payloads: list[tuple[str, object]] = []
 
-        if rounds_map:
-            tournaments.append(
-                {
-                    "id": f"wtt_{ev_id}",
-                    "name": ev_name,
-                    "location": location,
-                    "dates": "",
-                    "category": "WTT · SIMPLE MESSIEURS",
-                    "rounds": [{"name": k, "matches": v} for k, v in rounds_map.items()],
-                }
-            )
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            context = browser.new_context(user_agent=USER_AGENT, locale="fr-FR")
+            page = context.new_page()
 
-    return matches, tournaments
+            def on_response(response) -> None:
+                url = response.url.lower()
+                if any(k in url for k in ("wttcmsapigateway", "liveeventsapi", "wttapigateway", "getmatch", "livescore", "getofficial")):
+                    if response.status == 200:
+                        try:
+                            captured_payloads.append((response.url, response.json()))
+                        except Exception:
+                            pass
 
+            page.on("response", on_response)
+
+            for target in ("https://worldtabletennis.com/livescores", "https://worldtabletennis.com/eventslist"):
+                try:
+                    page.goto(target, wait_until="networkidle", timeout=25_000)
+                    page.wait_for_timeout(2000)
+                except Exception as exc:
+                    print(f"[warn] Playwright goto {target}: {exc}", file=sys.stderr)
+
+            browser.close()
+    except Exception as exc:
+        print(f"[warn] Playwright run failed: {exc}", file=sys.stderr)
+        return []
+
+    raw_matches: list[dict] = []
+    for _, payload in captured_payloads:
+        _collect_match_dicts(payload, raw_matches)
+
+    parsed: list[dict] = []
+    for rm in raw_matches:
+        ev_name = str(rm.get("eventName") or rm.get("tournamentName") or "WTT").strip()
+        vpn_req, vpn_note = detect_vpn(ev_name)
+        item = _parse_wtt_match_object(rm, ev_name, vpn_req, vpn_note, now_paris)
+        if item:
+            parsed.append(item)
+
+    print(f"[ok] WTT Playwright: {len(captured_payloads)} API responses, {len(parsed)} tracked matches")
+    return parsed
+
+
+# ---------------------------------------------------------------------------
+# Manual overrides & merge
+# ---------------------------------------------------------------------------
 
 def load_manual_overrides(path: Path) -> tuple[list[dict], list[dict]]:
     if not path.exists():
@@ -284,6 +467,24 @@ def merge_by_id(primary: list[dict], secondary: list[dict]) -> list[dict]:
     return list(seen.values())
 
 
+def prune_old_finished(matches: list[dict], now_paris: datetime) -> list[dict]:
+    cutoff = now_paris - timedelta(days=7)
+    kept: list[dict] = []
+    for m in matches:
+        if str(m.get("status", "")).lower() != "finished":
+            kept.append(m)
+            continue
+        try:
+            dt = datetime.fromisoformat(str(m.get("start_iso", "")).replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=PARIS_TZ)
+            if dt >= cutoff:
+                kept.append(m)
+        except ValueError:
+            kept.append(m)
+    return kept
+
+
 def write_status_index(site_dir: Path, updated_label: str, match_count: int, tournament_count: int) -> None:
     html = f"""<!doctype html>
 <html lang="fr">
@@ -295,13 +496,12 @@ def write_status_index(site_dir: Path, updated_label: str, match_count: int, tou
     body {{ font-family: system-ui, -apple-system, sans-serif; background: #09090b; color: #fafafa; padding: 32px; max-width: 640px; margin: 0 auto; }}
     .card {{ background: #131316; border: 1px solid #27272a; border-radius: 12px; padding: 20px; }}
     a {{ color: #e11d48; text-decoration: none; font-weight: 600; }}
-    code {{ background: #18181b; padding: 2px 6px; border-radius: 4px; }}
   </style>
 </head>
 <body>
   <div class="card">
     <h1>PingPong Tracker Feed</h1>
-    <p>Dernière mise à jour : <strong>{updated_label}</strong></p>
+    <p>Dernière mise à jour automatique : <strong>{updated_label}</strong></p>
     <p>{match_count} matchs · {tournament_count} tableaux internationaux</p>
     <p><a href="./matches.json">Ouvrir matches.json →</a></p>
   </div>
@@ -325,13 +525,19 @@ def main() -> int:
     updated_at = now_paris.isoformat(timespec="seconds")
     updated_label = now_paris.strftime("%d/%m %H:%M")
 
-    wtt_matches, wtt_tournaments = fetch_wtt_events_and_matches(now_paris)
+    # 1. Auto-scraped live & upcoming YouTube streams (FFTT + WTT)
+    yt_fftt = fetch_youtube_channel_streams(YOUTUBE_FFTT, "CLUB", "YouTube FFTT", now_paris)
+    yt_wtt = fetch_youtube_channel_streams(YOUTUBE_WTT, "INTL", "YouTube WTT", now_paris)
+
+    # 2. Auto-scraped WTT live scores & schedules via Playwright
+    wtt_matches = fetch_wtt_via_playwright(now_paris)
+
+    # 3. Base calendar & tournament brackets
     manual_matches, manual_tournaments = load_manual_overrides(Path(args.manual))
 
-    all_matches = merge_by_id(wtt_matches, manual_matches)
-    all_tournaments = merge_by_id(wtt_tournaments, manual_tournaments)
+    scraped = yt_fftt + yt_wtt + wtt_matches
+    all_matches = prune_old_finished(merge_by_id(scraped, manual_matches), now_paris)
 
-    # Ensure VPN flags are auto-filled if omitted
     for m in all_matches:
         if "vpn_required" not in m:
             vpn_req, vpn_note = detect_vpn(f"{m.get('competition', '')} {m.get('broadcast', '')}")
@@ -344,7 +550,7 @@ def main() -> int:
         "tracked_players": TRACKED_PLAYERS,
         "tracked_club": TRACKED_CLUB,
         "matches": all_matches,
-        "tournaments": all_tournaments,
+        "tournaments": manual_tournaments,
     }
 
     out_path = Path(args.out)
@@ -354,8 +560,8 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    write_status_index(out_path.parent, updated_label, len(all_matches), len(all_tournaments))
-    print(f"[ok] Wrote {out_path} ({len(all_matches)} matches, {len(all_tournaments)} tournaments)")
+    write_status_index(out_path.parent, updated_label, len(all_matches), len(manual_tournaments))
+    print(f"[ok] Wrote {out_path} ({len(all_matches)} matches, {len(manual_tournaments)} tournaments)")
     return 0
 
 
