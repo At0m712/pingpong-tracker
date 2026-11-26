@@ -486,28 +486,11 @@ def prune_old_finished(matches: list[dict], now_paris: datetime) -> list[dict]:
 
 
 def write_status_index(site_dir: Path, updated_label: str, match_count: int, tournament_count: int) -> None:
-    html = f"""<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PingPong Tracker — Feed JSON</title>
-  <style>
-    body {{ font-family: system-ui, -apple-system, sans-serif; background: #09090b; color: #fafafa; padding: 32px; max-width: 640px; margin: 0 auto; }}
-    .card {{ background: #131316; border: 1px solid #27272a; border-radius: 12px; padding: 20px; }}
-    a {{ color: #e11d48; text-decoration: none; font-weight: 600; }}
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>PingPong Tracker Feed</h1>
-    <p>Dernière mise à jour automatique : <strong>{updated_label}</strong></p>
-    <p>{match_count} matchs · {tournament_count} tableaux internationaux</p>
-    <p><a href="./matches.json">Ouvrir matches.json →</a></p>
-  </div>
-</body>
-</html>
-"""
+    template_path = Path(__file__).parent / "site_template.html"
+    if template_path.exists():
+        html = template_path.read_text(encoding="utf-8").replace("__UPDATED_LABEL__", updated_label)
+    else:
+        html = f"<h1>PingPong Tracker</h1><p>MAJ {updated_label} · {match_count} matchs</p>"
     (site_dir / "index.html").write_text(html, encoding="utf-8")
 
 
