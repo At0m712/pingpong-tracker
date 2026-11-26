@@ -212,13 +212,17 @@ class MainActivity : Activity() {
         val allMatches = feed?.let { MatchFormatter.sortMatchesForList(it.matches) }.orEmpty()
         val trackedClubs = store.getTrackedClubs()
 
+        val visibleCount = allMatches.count { match ->
+            !match.isClub || trackedClubs.any { club -> match.matchesClub(club) }
+        }
+
         // Header sync status
         headerSyncStatus.text = if (store.isSyncing()) {
             "Synchronisation..."
         } else {
             val label = feed?.updatedLabel?.takeIf { it.isNotBlank() }
                 ?: MatchFormatter.formatSyncLabel(store.getLastSyncEpochMs())
-            "MAJ $label · ${allMatches.size} matchs"
+            "MAJ $label · $visibleCount matchs"
         }
         btnHeaderRefresh.isEnabled = !store.isSyncing()
         btnHeaderRefresh.alpha = if (store.isSyncing()) 0.4f else 1f
@@ -252,12 +256,19 @@ class MainActivity : Activity() {
             matchesFilterChips.addView(chip)
         }
 
-        val filtered = when (currentFilter) {
-            MatchFilter.ALL -> allMatches
-            MatchFilter.LIVE -> allMatches.filter { it.isLive }
-            MatchFilter.CLUB -> allMatches.filter { it.isClub }
-            MatchFilter.INTL -> allMatches.filter { it.isInternational }
-        }
+        val filtered = allMatches
+            .filter { match ->
+                // Club matches: ONLY show clubs explicitly followed by the user (Bruille + added clubs)
+                !match.isClub || trackedClubs.any { club -> match.matchesClub(club) }
+            }
+            .let { base ->
+                when (currentFilter) {
+                    MatchFilter.ALL -> base
+                    MatchFilter.LIVE -> base.filter { it.isLive }
+                    MatchFilter.CLUB -> base.filter { it.isClub }
+                    MatchFilter.INTL -> base.filter { it.isInternational }
+                }
+            }
 
         matchesListContainer.removeAllViews()
         if (filtered.isEmpty()) {

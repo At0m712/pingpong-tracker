@@ -61,8 +61,12 @@ object NotificationHelper {
         if (!hasNotificationPermission(context)) return
         ensureChannel(context)
 
+        val trackedClubs = store.getTrackedClubs()
+
         for (match in matches) {
             if (match.isFinished) continue
+            // Never notify for club matches outside the user's followed clubs
+            if (match.isClub && trackedClubs.none { club -> match.matchesClub(club) }) continue
 
             val startInstant = match.startInstant()
             val minutesUntil = startInstant?.let { Duration.between(now, it).toMinutes() }
