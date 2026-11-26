@@ -3,24 +3,23 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09090B"
+    android:background="@drawable/bg_app_backdrop"
     android:orientation="vertical">
 
-    <!-- Top Brand Header -->
+    <!-- Luxury Editorial Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#09090B"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:paddingHorizontal="18dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="12dp"
             android:contentDescription="Logo PingPong Tracker"
             android:src="@drawable/ic_brand_logo" />
 
@@ -33,10 +32,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:letterSpacing="0.08"
+                android:fontFamily="serif"
+                android:letterSpacing="0.12"
                 android:text="PING TRACKER"
-                android:textColor="#FAFAFA"
-                android:textSize="15sp"
+                android:textColor="#F5F0E6"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -50,16 +50,17 @@
                     android:id="@+id/header_status_dot"
                     android:layout_width="6dp"
                     android:layout_height="6dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="6dp"
                     android:background="@drawable/bg_status_dot" />
 
                 <TextView
                     android:id="@+id/header_sync_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
                     android:text="MAJ --:--"
-                    android:textColor="#71717A"
-                    android:textSize="11sp" />
+                    android:textColor="#D4AF37"
+                    android:textSize="10sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -73,7 +74,7 @@
             android:padding="9dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_refresh"
-            android:tint="#E4E4E7" />
+            android:tint="#E9D28A" />
 
         <ImageButton
             android:id="@+id/btn_header_settings"
@@ -84,13 +85,13 @@
             android:padding="9dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_settings"
-            android:tint="#E4E4E7" />
+            android:tint="#E9D28A" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#1D1D22" />
+        android:background="#24D4AF37" />
 
     <!-- Error banner -->
     <TextView
@@ -115,25 +116,28 @@
             android:id="@+id/tab_matches_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="18dp">
 
-                <!-- Hero Spotlight Match Card -->
+                <!-- Hero Spotlight Match Card (Haute Horlogerie Edition) -->
                 <LinearLayout
                     android:id="@+id/hero_match_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="18dp"
                     android:background="@drawable/bg_hero_card"
                     android:clickable="true"
                     android:focusable="true"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="18dp"
                     android:visibility="gone">
 
                     <LinearLayout
@@ -148,11 +152,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
-                            android:letterSpacing="0.08"
+                            android:letterSpacing="0.12"
                             android:maxLines="1"
                             android:text="PROCHAIN RENDEZ-VOUS"
-                            android:textColor="#FB7185"
-                            android:textSize="10sp"
+                            android:textColor="#E9D28A"
+                            android:textSize="9sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -164,7 +168,7 @@
                             android:paddingHorizontal="6dp"
                             android:paddingVertical="2dp"
                             android:text="VPN"
-                            android:textColor="#FBBF24"
+                            android:textColor="#FCD34D"
                             android:textSize="9sp"
                             android:textStyle="bold"
                             android:visibility="gone" />
@@ -174,10 +178,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_live_pill"
+                            android:fontFamily="monospace"
                             android:paddingHorizontal="8dp"
                             android:paddingVertical="2dp"
-                            android:textColor="#FAFAFA"
-                            android:textSize="10sp"
+                            android:textColor="#F5F0E6"
+                            android:textSize="9sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -185,7 +190,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="18dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -199,52 +204,66 @@
 
                             <TextView
                                 android:id="@+id/hero_crest_home"
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
                                 android:background="@drawable/bg_crest_bruille"
+                                android:fontFamily="serif"
                                 android:gravity="center"
-                                android:letterSpacing="0.04"
-                                android:textColor="#FAFAFA"
-                                android:textSize="14sp"
+                                android:letterSpacing="0.06"
+                                android:textColor="#F5F0E6"
+                                android:textSize="17sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/hero_home_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="9dp"
                                 android:ellipsize="end"
+                                android:fontFamily="serif"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:textColor="#FAFAFA"
-                                android:textSize="13sp"
+                                android:textColor="#F5F0E6"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                        <!-- Center Score / VS -->
+                        <!-- Center Score / VS + Ticking Clock -->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingHorizontal="10dp">
+                            android:paddingHorizontal="8dp">
 
                             <TextView
                                 android:id="@+id/hero_center_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="serif"
+                                android:text="vs"
+                                android:textColor="#E9D28A"
+                                android:textSize="26sp"
+                                android:textStyle="bold|italic" />
+
+                            <TextView
+                                android:id="@+id/hero_ticking_clock"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/bg_score_box"
                                 android:fontFamily="monospace"
-                                android:text="VS"
-                                android:textColor="#FAFAFA"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
+                                android:paddingHorizontal="8dp"
+                                android:paddingVertical="3dp"
+                                android:textColor="#F5F0E6"
+                                android:textSize="10sp" />
 
                             <TextView
                                 android:id="@+id/hero_broadcast"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:textColor="#A1A1AA"
+                                android:layout_marginTop="4dp"
+                                android:textColor="#98938A"
                                 android:textSize="10sp" />
                         </LinearLayout>
 
@@ -258,34 +277,42 @@
 
                             <TextView
                                 android:id="@+id/hero_crest_away"
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
                                 android:background="@drawable/bg_crest_neutral"
+                                android:fontFamily="serif"
                                 android:gravity="center"
-                                android:letterSpacing="0.04"
-                                android:textColor="#FAFAFA"
-                                android:textSize="14sp"
+                                android:letterSpacing="0.06"
+                                android:textColor="#E9D28A"
+                                android:textSize="17sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/hero_away_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="9dp"
                                 android:ellipsize="end"
+                                android:fontFamily="serif"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:textColor="#E4E4E7"
-                                android:textSize="13sp"
+                                android:textColor="#E5DFD5"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- CTA Strip -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="#1FD4AF37" />
+
+                    <!-- Gold CTA Strip -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="12dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -296,18 +323,19 @@
                             android:layout_weight="1"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:textColor="#A1A1AA"
+                            android:textColor="#98938A"
                             android:textSize="11sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_button_accent"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp"
-                            android:text="Voir la diffusion →"
-                            android:textColor="#FFFFFF"
-                            android:textSize="11sp"
+                            android:background="@drawable/bg_button_gold"
+                            android:letterSpacing="0.06"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="7dp"
+                            android:text="VOIR LE DIRECT →"
+                            android:textColor="#09090B"
+                            android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -316,7 +344,7 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="14dp"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -334,7 +362,7 @@
                     android:gravity="center"
                     android:padding="28dp"
                     android:text="Aucun match disponible. Appuyez sur l'icône d'actualisation ou vérifiez l'URL dans les réglages."
-                    android:textColor="#71717A"
+                    android:textColor="#98938A"
                     android:textSize="13sp"
                     android:visibility="gone" />
 
@@ -369,18 +397,19 @@
                     android:background="@drawable/bg_club_banner"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:padding="18dp">
 
                     <TextView
                         android:id="@+id/club_hub_crest"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_marginEnd="14dp"
                         android:background="@drawable/bg_crest_bruille"
+                        android:fontFamily="serif"
                         android:gravity="center"
                         android:text="BR"
-                        android:textColor="#FAFAFA"
-                        android:textSize="15sp"
+                        android:textColor="#6EE7B7"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -392,10 +421,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:letterSpacing="0.08"
+                            android:letterSpacing="0.14"
                             android:text="PRO A MESSIEURS"
-                            android:textColor="#4ADE80"
-                            android:textSize="10sp"
+                            android:textColor="#6EE7B7"
+                            android:textSize="9sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -403,9 +432,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
+                            android:fontFamily="serif"
                             android:text="CTT Bruille"
-                            android:textColor="#FAFAFA"
-                            android:textSize="18sp"
+                            android:textColor="#F5F0E6"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -414,7 +444,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="1 club suivi · 0 match à venir"
-                            android:textColor="#A1A1AA"
+                            android:textColor="#98938A"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -430,17 +460,17 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:letterSpacing="0.06"
+                        android:letterSpacing="0.12"
                         android:text="MES CLUBS SUIVIS"
-                        android:textColor="#A1A1AA"
-                        android:textSize="11sp"
+                        android:textColor="#D4AF37"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
                         android:id="@+id/btn_add_club"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:background="@drawable/bg_button_accent"
+                        android:background="@drawable/bg_button_gold"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
@@ -448,18 +478,18 @@
                         android:paddingHorizontal="12dp">
 
                         <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
                             android:layout_marginEnd="4dp"
                             android:src="@drawable/ic_plus"
-                            android:tint="#FFFFFF" />
+                            android:tint="#09090B" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ajouter un club"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
+                            android:text="Ajouter"
+                            android:textColor="#09090B"
+                            android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -483,10 +513,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:letterSpacing="0.06"
+                    android:letterSpacing="0.12"
                     android:text="CALENDRIER &amp; RÉSULTATS"
-                    android:textColor="#A1A1AA"
-                    android:textSize="11sp"
+                    android:textColor="#98938A"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -497,7 +527,7 @@
                     android:gravity="center"
                     android:padding="28dp"
                     android:text="Aucun match trouvé pour ce club dans le flux actuel."
-                    android:textColor="#71717A"
+                    android:textColor="#98938A"
                     android:textSize="13sp"
                     android:visibility="gone" />
 
@@ -548,17 +578,17 @@
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/bg_tournament_banner"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="18dp"
                     android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tournament_category"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:letterSpacing="0.08"
+                        android:letterSpacing="0.14"
                         android:text="WTT FINALS"
-                        android:textColor="#FBBF24"
-                        android:textSize="10sp"
+                        android:textColor="#E9D28A"
+                        android:textSize="9sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -566,16 +596,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:textColor="#FAFAFA"
-                        android:textSize="18sp"
+                        android:fontFamily="serif"
+                        android:textColor="#F5F0E6"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tournament_subtitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:textColor="#A1A1AA"
+                        android:layout_marginTop="4dp"
+                        android:textColor="#98938A"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -604,7 +635,7 @@
                     android:gravity="center"
                     android:padding="28dp"
                     android:text="Aucun tableau international disponible dans le flux actuel."
-                    android:textColor="#71717A"
+                    android:textColor="#98938A"
                     android:textSize="13sp"
                     android:visibility="gone" />
 
@@ -616,10 +647,10 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
-                    android:letterSpacing="0.06"
+                    android:letterSpacing="0.12"
                     android:text="MATCHS INTERNATIONAUX SUIVIS"
-                    android:textColor="#A1A1AA"
-                    android:textSize="11sp"
+                    android:textColor="#D4AF37"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -632,121 +663,128 @@
         </ScrollView>
     </FrameLayout>
 
-    <!-- Bottom Navigation Bar with active accent indicator -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#1D1D22" />
-
+    <!-- Floating Luxury Pill Bottom Navigation -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:background="#0D0D10"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
-            android:id="@+id/nav_matches"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_nav_pill"
+            android:orientation="horizontal"
+            android:paddingHorizontal="6dp">
 
-            <View
-                android:id="@+id/nav_matches_indicator"
-                android:layout_width="32dp"
-                android:layout_height="2.5dp"
-                android:background="#E11D48" />
+            <LinearLayout
+                android:id="@+id/nav_matches"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/nav_matches_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_tab_matches"
-                android:tint="#FAFAFA" />
+                <View
+                    android:id="@+id/nav_matches_indicator"
+                    android:layout_width="24dp"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="#D4AF37" />
 
-            <TextView
-                android:id="@+id/nav_matches_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="Matchs"
-                android:textColor="#FAFAFA"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/nav_matches_icon"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:src="@drawable/ic_tab_matches"
+                    android:tint="#E9D28A" />
 
-        <LinearLayout
-            android:id="@+id/nav_clubs"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/nav_matches_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:letterSpacing="0.04"
+                    android:text="À l'affiche"
+                    android:textColor="#E9D28A"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-            <View
-                android:id="@+id/nav_clubs_indicator"
-                android:layout_width="32dp"
-                android:layout_height="2.5dp"
-                android:background="#E11D48"
-                android:visibility="invisible" />
+            <LinearLayout
+                android:id="@+id/nav_clubs"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/nav_clubs_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_tab_clubs"
-                android:tint="#71717A" />
+                <View
+                    android:id="@+id/nav_clubs_indicator"
+                    android:layout_width="24dp"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="#D4AF37"
+                    android:visibility="invisible" />
 
-            <TextView
-                android:id="@+id/nav_clubs_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="Clubs"
-                android:textColor="#71717A"
-                android:textSize="11sp" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/nav_clubs_icon"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:src="@drawable/ic_tab_clubs"
+                    android:tint="#71717A" />
 
-        <LinearLayout
-            android:id="@+id/nav_bracket"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/nav_clubs_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:letterSpacing="0.04"
+                    android:text="Clubs"
+                    android:textColor="#71717A"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
-            <View
-                android:id="@+id/nav_bracket_indicator"
-                android:layout_width="32dp"
-                android:layout_height="2.5dp"
-                android:background="#E11D48"
-                android:visibility="invisible" />
+            <LinearLayout
+                android:id="@+id/nav_bracket"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/nav_bracket_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/ic_tab_bracket"
-                android:tint="#71717A" />
+                <View
+                    android:id="@+id/nav_bracket_indicator"
+                    android:layout_width="24dp"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="#D4AF37"
+                    android:visibility="invisible" />
 
-            <TextView
-                android:id="@+id/nav_bracket_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="Tableaux"
-                android:textColor="#71717A"
-                android:textSize="11sp" />
+                <ImageView
+                    android:id="@+id/nav_bracket_icon"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:src="@drawable/ic_tab_bracket"
+                    android:tint="#71717A" />
+
+                <TextView
+                    android:id="@+id/nav_bracket_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:letterSpacing="0.04"
+                    android:text="Tableaux"
+                    android:textColor="#71717A"
+                    android:textSize="10sp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

@@ -67,13 +67,14 @@
 
             <TextView
                 android:id="@+id/item_crest_home"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/bg_crest_neutral"
+                android:fontFamily="serif"
                 android:gravity="center"
-                android:textColor="#FAFAFA"
-                android:textSize="10sp"
+                android:textColor="#F5F0E6"
+                android:textSize="11sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -83,7 +84,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#FAFAFA"
+                android:textColor="#F5F0E6"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -110,13 +111,14 @@
 
             <TextView
                 android:id="@+id/item_crest_away"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/bg_crest_neutral"
+                android:fontFamily="serif"
                 android:gravity="center"
-                android:textColor="#D4D4D8"
-                android:textSize="10sp"
+                android:textColor="#E9D28A"
+                android:textSize="11sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -126,7 +128,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#D4D4D8"
+                android:textColor="#D4CFC5"
                 android:textSize="14sp" />
 
             <TextView

@@ -12,6 +12,8 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -81,6 +83,7 @@ class MainActivity : Activity() {
     private lateinit var heroCrestHome: TextView
     private lateinit var heroHomeName: TextView
     private lateinit var heroCenterScore: TextView
+    private lateinit var heroTickingClock: TextView
     private lateinit var heroBroadcast: TextView
     private lateinit var heroCrestAway: TextView
     private lateinit var heroAwayName: TextView
@@ -116,6 +119,15 @@ class MainActivity : Activity() {
     private var currentFilter: MatchFilter = MatchFilter.ALL
     private var selectedClub: String? = null
     private var selectedTournamentId: String? = null
+    private var heroMatch: MatchItem? = null
+
+    private val clockHandler = Handler(Looper.getMainLooper())
+    private val clockTicker = object : Runnable {
+        override fun run() {
+            updateHeroTickingClock()
+            clockHandler.postDelayed(this, 1000L)
+        }
+    }
 
     private val prefsListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
@@ -150,9 +162,12 @@ class MainActivity : Activity() {
         super.onStart()
         store.prefs.registerOnSharedPreferenceChangeListener(prefsListener)
         renderAll()
+        clockHandler.removeCallbacks(clockTicker)
+        clockHandler.post(clockTicker)
     }
 
     override fun onStop() {
+        clockHandler.removeCallbacks(clockTicker)
         store.prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
         super.onStop()
     }
@@ -187,6 +202,7 @@ class MainActivity : Activity() {
         heroCrestHome = findViewById(R.id.hero_crest_home)
         heroHomeName = findViewById(R.id.hero_home_name)
         heroCenterScore = findViewById(R.id.hero_center_score)
+        heroTickingClock = findViewById(R.id.hero_ticking_clock)
         heroBroadcast = findViewById(R.id.hero_broadcast)
         heroCrestAway = findViewById(R.id.hero_crest_away)
         heroAwayName = findViewById(R.id.hero_away_name)
@@ -240,7 +256,7 @@ class MainActivity : Activity() {
 
     private fun updateNavItem(indicator: View, icon: ImageView, label: TextView, active: Boolean) {
         indicator.visibility = if (active) View.VISIBLE else View.INVISIBLE
-        val color = if (active) 0xFFFAFAFA.toInt() else 0xFF71717A.toInt()
+        val color = if (active) 0xFFE9D28A.toInt() else 0xFF71717A.toInt()
         icon.setColorFilter(color)
         label.setTextColor(color)
         label.setTypeface(null, if (active) Typeface.BOLD else Typeface.NORMAL)
@@ -333,6 +349,7 @@ class MainActivity : Activity() {
     }
 
     private fun bindHeroCard(match: MatchItem, trackedClubs: List<String>) {
+        heroMatch = match
         heroKicker.text = if (match.isLive) {
             "EN DIRECT · ${MatchFormatter.formatCompetition(match)}"
         } else {
@@ -351,12 +368,44 @@ class MainActivity : Activity() {
         bindCrest(heroCrestAway, match.away, trackedClubs)
         heroHomeName.text = match.home
         heroAwayName.text = match.away
-        heroCenterScore.text = match.score.trim().ifEmpty { "VS" }
+        heroCenterScore.text = match.score.trim().ifEmpty { "vs" }
         heroBroadcast.text = match.broadcast.trim()
         heroFollowed.text = match.followed.joinToString(" · ")
+        updateHeroTickingClock()
 
         heroMatchCard.setOnClickListener {
             if (match.url.isNotBlank()) openUrl(match.url)
+        }
+    }
+
+    private fun updateHeroTickingClock() {
+        val m = heroMatch ?: return
+        if (m.isLive) {
+            heroTickingClock.text = "MATCH EN COURS"
+            return
+        }
+        if (m.isFinished) {
+            heroTickingClock.text = "TERMINÉ"
+            return
+        }
+        val start = m.startInstant()
+        if (start == null) {
+            heroTickingClock.text = "À VENIR"
+            return
+        }
+        val diffSec = java.time.Duration.between(java.time.Instant.now(), start).seconds
+        if (diffSec <= 0) {
+            heroTickingClock.text = "IMMINENT"
+            return
+        }
+        val days = diffSec / 86400
+        val hrs = (diffSec % 86400) / 3600
+        val mins = (diffSec % 3600) / 60
+        val secs = diffSec % 60
+        heroTickingClock.text = if (days > 0) {
+            String.format(Locale.FRANCE, "J-%d · %02d:%02d:%02d", days, hrs, mins, secs)
+        } else {
+            String.format(Locale.FRANCE, "%02d:%02d:%02d", hrs, mins, secs)
         }
     }
     // endregion
