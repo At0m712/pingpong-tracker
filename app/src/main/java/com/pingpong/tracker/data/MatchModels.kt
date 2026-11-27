@@ -142,5 +142,6 @@ data class PlayerTournamentResult(
     val date: String,
     val stage: String,
     val detail: String = "",
+    val discipline: String = "SINGLE", // SINGLE, DOUBLE, MIXED
 )
 

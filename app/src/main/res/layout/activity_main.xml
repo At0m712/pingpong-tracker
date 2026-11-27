@@ -872,16 +872,29 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Tournaments Played Section -->
+                    <!-- Tournaments Played Section + Discipline Filter -->
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="8dp"
                         android:letterSpacing="0.1"
-                        android:text="TOURNOIS DÉJÀ JOUÉS"
+                        android:text="TOURNOIS DÉJÀ JOUÉS (2026)"
                         android:textColor="#7A5C6B"
                         android:textSize="10sp"
                         android:textStyle="bold" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/player_discipline_chips"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
 
                     <TextView
                         android:id="@+id/player_tournaments_empty"

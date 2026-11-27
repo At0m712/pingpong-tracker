@@ -181,16 +181,22 @@
       "world_rank": "#2",
       "win_rate": "82%",
       "record": "Saison 2026",
-      "titles": "4",
+      "titles": "5",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "Bat A. Lind 3-0 · 1-3 vs Zhou Qihao" },
-        { "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec A. Lebrun)" },
-        { "tournament": "WTT Champions Yokohama", "date": "Août 2026", "stage": "1/4 finale", "detail": "Japon" },
-        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "1er Français vainqueur d'un Smash · + Double" },
-        { "tournament": "United States Smash", "date": "Juil. 2026", "stage": "1/2 finale", "detail": "Los Angeles · bat A. Lebrun 4-2 en 1/4" },
-        { "tournament": "WTT Champions Chongqing", "date": "Mars 2026", "stage": "Vainqueur", "detail": "Bat Wen Ruibo 4-1 en finale" },
-        { "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec A. Lebrun)" }
+        { "discipline": "SINGLE", "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "Bat A. Lind 3-0 · 1-3 vs Zhou Qihao" },
+        { "discipline": "DOUBLE", "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Avec Alexis Lebrun vs Källberg/Karlsson" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Macao", "date": "Sept. 2026", "stage": "1/4 finale", "detail": "Macao, Chine" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Yokohama", "date": "Août 2026", "stage": "1/4 finale", "detail": "Japon" },
+        { "discipline": "SINGLE", "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "1er Français vainqueur d'un Grand Smash" },
+        { "discipline": "DOUBLE", "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "Avec Alexis Lebrun (3-0 vs Wong/Chan)" },
+        { "discipline": "SINGLE", "tournament": "United States Smash", "date": "Juil. 2026", "stage": "1/2 finale", "detail": "Los Angeles · bat Alexis Lebrun 4-2 en 1/4" },
+        { "discipline": "MIXED", "tournament": "United States Smash", "date": "Juil. 2026", "stage": "1/4 finale", "detail": "Double mixte · Los Angeles" },
+        { "discipline": "SINGLE", "tournament": "Mondiaux par équipes Londres", "date": "Mai 2026", "stage": "1/2 finale", "detail": "Médaille de bronze avec l'Équipe de France" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Chongqing", "date": "Mars 2026", "stage": "Vainqueur", "detail": "Bat Wen Ruibo 4-1 en finale" },
+        { "discipline": "DOUBLE", "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Avec Alexis Lebrun · Singapour" },
+        { "discipline": "SINGLE", "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "1/4 finale", "detail": "Singapour" },
+        { "discipline": "SINGLE", "tournament": "Europe Top 16 Cup", "date": "Fév. 2026", "stage": "1/2 finale", "detail": "Montreux, Suisse" }
       ]
     },
     {
@@ -203,12 +209,18 @@
       "titles": "3",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "2-3 vs Patrick Franziska" },
-        { "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec F. Lebrun)" },
-        { "tournament": "WTT Champions Yokohama", "date": "Août 2026", "stage": "1/4 finale", "detail": "Japon" },
-        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "Double Messieurs (3-0 en finale)" },
-        { "tournament": "United States Smash", "date": "Juil. 2026", "stage": "1/4 finale", "detail": "Los Angeles · 2-4 vs Félix Lebrun" },
-        { "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec F. Lebrun)" }
+        { "discipline": "SINGLE", "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "2-3 vs Patrick Franziska" },
+        { "discipline": "DOUBLE", "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Avec Félix Lebrun vs Källberg/Karlsson" },
+        { "discipline": "MIXED", "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "Avec Charlotte Lutz" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Yokohama", "date": "Août 2026", "stage": "1/4 finale", "detail": "Japon" },
+        { "discipline": "DOUBLE", "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "Avec Félix Lebrun (3-0 vs Wong/Chan)" },
+        { "discipline": "SINGLE", "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "1/8 finale", "detail": "Suède" },
+        { "discipline": "SINGLE", "tournament": "United States Smash", "date": "Juil. 2026", "stage": "1/4 finale", "detail": "Los Angeles · 2-4 vs Félix Lebrun" },
+        { "discipline": "SINGLE", "tournament": "Mondiaux par équipes Londres", "date": "Mai 2026", "stage": "1/2 finale", "detail": "Médaille de bronze avec l'Équipe de France" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Chongqing", "date": "Mars 2026", "stage": "1/8 finale", "detail": "Chine" },
+        { "discipline": "DOUBLE", "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Avec Félix Lebrun · Singapour" },
+        { "discipline": "MIXED", "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "1/8 finale", "detail": "Avec Charlotte Lutz" },
+        { "discipline": "SINGLE", "tournament": "Europe Top 16 Cup", "date": "Fév. 2026", "stage": "Finale", "detail": "Bat Félix Lebrun 3-0 en 1/2 · Montreux" }
       ]
     },
     {
@@ -216,15 +228,21 @@
       "country": "FRA",
       "club": "CTT Bruille",
       "world_rank": "#58",
-      "win_rate": "68%",
+      "win_rate": "71%",
       "record": "Saison 2026",
-      "titles": "1",
+      "titles": "2",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "1/4 finale", "detail": "Oman · 2-3 vs Park Ganghyeon" },
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/16 finale", "detail": "0-3 vs Tomislav Pucar" },
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "2-3 vs Jang Woo-jin (futur vainqueur)" },
-        { "tournament": "Pro A Messieurs 2026-27", "date": "Sept.–Nov. 2026", "stage": "CTT Bruille", "detail": "Phase aller Pro A" }
+        { "discipline": "SINGLE", "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "1/4 finale", "detail": "Oman · 2-3 vs Park Ganghyeon" },
+        { "discipline": "DOUBLE", "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "1/4 finale", "detail": "Avec Thibault Poret · Oman" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/16 finale", "detail": "0-3 vs Tomislav Pucar" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "2-3 vs Jang Woo-jin (futur vainqueur)" },
+        { "discipline": "SINGLE", "tournament": "WTT Feeder Lille", "date": "2026", "stage": "1/4 finale", "detail": "Tête de série n°1 · bat B. Dupont, blessé vs J. Rolland" },
+        { "discipline": "SINGLE", "tournament": "Mondiaux par équipes Londres", "date": "Mai 2026", "stage": "1/2 finale", "detail": "Médaille de bronze avec l'Équipe de France" },
+        { "discipline": "SINGLE", "tournament": "WTT Contender Tunis", "date": "Mars 2026", "stage": "Vainqueur", "detail": "1er titre WTT Contender en simple !" },
+        { "discipline": "MIXED", "tournament": "WTT Contender Tunis", "date": "Mars 2026", "stage": "1/4 finale", "detail": "Double mixte · Tunisie" },
+        { "discipline": "DOUBLE", "tournament": "WTT Star Contender Chennai", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Inde · Médaille d'or avec Thibault Poret !" },
+        { "discipline": "SINGLE", "tournament": "WTT Star Contender Chennai", "date": "Fév. 2026", "stage": "1/2 finale", "detail": "Inde · battu par Thibault Poret en 1/2" }
       ]
     },
     {
@@ -232,15 +250,20 @@
       "country": "FRA",
       "club": "SPO Rouen / Équipe de France",
       "world_rank": "#28",
-      "win_rate": "69%",
+      "win_rate": "70%",
       "record": "Saison 2026",
       "titles": "1",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/16 finale", "detail": "0-3 vs Zhou Qihao" },
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "0-3 vs Truls Möregårdh" },
-        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Tableau", "detail": "Suède" },
-        { "tournament": "WTT Star Contender Astana", "date": "2026", "stage": "Tableau", "detail": "Kazakhstan" }
+        { "discipline": "SINGLE", "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/16 finale", "detail": "0-3 vs Zhou Qihao" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "0-3 vs Truls Möregårdh" },
+        { "discipline": "SINGLE", "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Tableau", "detail": "Suède" },
+        { "discipline": "MIXED", "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "1/8 finale", "detail": "Avec Prithika Pavade" },
+        { "discipline": "SINGLE", "tournament": "WTT Star Contender Astana", "date": "2026", "stage": "Tableau", "detail": "Kazakhstan" },
+        { "discipline": "SINGLE", "tournament": "WTT Contender Tunis", "date": "Mars 2026", "stage": "1/4 finale", "detail": "Tunisie" },
+        { "discipline": "DOUBLE", "tournament": "WTT Star Contender Chennai", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Inde · Titre avec Flavien Coton !" },
+        { "discipline": "SINGLE", "tournament": "WTT Star Contender Chennai", "date": "Fév. 2026", "stage": "Finale", "detail": "Inde · bat Flavien Coton en 1/2, battu par L. Jančařík" },
+        { "discipline": "MIXED", "tournament": "WTT Star Contender Chennai", "date": "Fév. 2026", "stage": "1/4 finale", "detail": "Inde · Avec Prithika Pavade" }
       ]
     },
     {
@@ -248,14 +271,18 @@
       "country": "FRA",
       "club": "TTF Liebherr Ochsenhausen",
       "world_rank": "#29",
-      "win_rate": "66%",
+      "win_rate": "67%",
       "record": "Saison 2026",
       "titles": "0",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "Tableau", "detail": "Oman" },
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Tableau", "detail": "Allemagne" },
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "Exploit 3-0 vs T. Harimoto · 2-3 vs Liang Jingkun" }
+        { "discipline": "SINGLE", "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "Tableau", "detail": "Oman" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Tableau", "detail": "Allemagne" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "Exploit 3-0 vs T. Harimoto · 2-3 vs Liang Jingkun" },
+        { "discipline": "MIXED", "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "1/4 finale", "detail": "Avec Prithika Pavade" },
+        { "discipline": "SINGLE", "tournament": "Mondiaux par équipes Londres", "date": "Mai 2026", "stage": "1/2 finale", "detail": "Médaille de bronze avec l'Équipe de France" },
+        { "discipline": "DOUBLE", "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "1/8 finale", "detail": "Singapour" },
+        { "discipline": "SINGLE", "tournament": "Europe Top 16 Cup", "date": "Fév. 2026", "stage": "1/4 finale", "detail": "Montreux, Suisse" }
       ]
     },
     {
@@ -268,8 +295,8 @@
       "titles": "1",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "Tableau", "detail": "Bat Thibault Poret 3-0 au 1er tour" },
-        { "tournament": "WTT Champions Macao", "date": "Sept. 2026", "stage": "Vainqueur", "detail": "Bat Hugo Calderano 4-1 en finale" }
+        { "discipline": "SINGLE", "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "Tableau", "detail": "Bat Thibault Poret 3-0 au 1er tour" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Macao", "date": "Sept. 2026", "stage": "Vainqueur", "detail": "Bat Hugo Calderano 4-1 en finale" }
       ]
     },
     {
@@ -282,8 +309,8 @@
       "titles": "1",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Vainqueur", "detail": "Bat Patrick Franziska 4-2 en finale" },
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "0-3 vs Simon Gauzy" }
+        { "discipline": "SINGLE", "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Vainqueur", "detail": "Bat Patrick Franziska 4-2 en finale" },
+        { "discipline": "SINGLE", "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "0-3 vs Simon Gauzy" }
       ]
     },
     {
@@ -296,7 +323,7 @@
       "titles": "3",
       "photo_url": "",
       "history": [
-        { "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Simple Messieurs · Singapour" }
+        { "discipline": "SINGLE", "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Simple Messieurs · Singapour" }
       ]
     }
   ]

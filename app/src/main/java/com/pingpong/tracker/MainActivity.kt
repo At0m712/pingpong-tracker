@@ -54,6 +54,13 @@ class MainActivity : Activity() {
         INTL("WTT / Inter"),
     }
 
+    private enum class PlayerDiscipline(val key: String, val label: String) {
+        ALL("ALL", "Tous"),
+        SINGLE("SINGLE", "Simple"),
+        DOUBLE("DOUBLE", "Double"),
+        MIXED("MIXED", "Double Mixte"),
+    }
+
     private lateinit var store: MatchStore
     private lateinit var pinkDustBg: PinkDustBackgroundView
 
@@ -129,6 +136,7 @@ class MainActivity : Activity() {
     private lateinit var statWinRate: TextView
     private lateinit var statWinLabel: TextView
     private lateinit var statTitles: TextView
+    private lateinit var playerDisciplineChips: LinearLayout
     private lateinit var playerTournamentsEmpty: TextView
     private lateinit var playerTournamentsContainer: LinearLayout
 
@@ -147,6 +155,7 @@ class MainActivity : Activity() {
     private var currentFilter: MatchFilter = MatchFilter.ALL
     private var selectedClub: String? = null
     private var selectedPlayer: String? = null
+    private var selectedDiscipline: PlayerDiscipline = PlayerDiscipline.ALL
     private var selectedTournamentId: String? = null
     private var heroMatch: MatchItem? = null
 
@@ -276,6 +285,7 @@ class MainActivity : Activity() {
         statWinRate = findViewById(R.id.stat_win_rate)
         statWinLabel = findViewById(R.id.stat_win_label)
         statTitles = findViewById(R.id.stat_titles)
+        playerDisciplineChips = findViewById(R.id.player_discipline_chips)
         playerTournamentsEmpty = findViewById(R.id.player_tournaments_empty)
         playerTournamentsContainer = findViewById(R.id.player_tournaments_container)
 
@@ -785,16 +795,67 @@ class MainActivity : Activity() {
             }
         }
 
+        // Discipline filter chips: Tous / Simple / Double / Double Mixte
+        playerDisciplineChips.removeAllViews()
+        for (disc in PlayerDiscipline.entries) {
+            val count = if (disc == PlayerDiscipline.ALL) {
+                history.size
+            } else {
+                history.count { it.discipline.equals(disc.key, ignoreCase = true) }
+            }
+            val label = if (count > 0) "${disc.label} ($count)" else disc.label
+            playerDisciplineChips.addView(
+                createPillChip(
+                    text = label,
+                    active = disc == selectedDiscipline,
+                    removable = false,
+                    onClick = {
+                        selectedDiscipline = disc
+                        renderPlayersTab(feedPlayers, allMatches, tournaments)
+                    },
+                )
+            )
+        }
+
+        val filteredHistory = if (selectedDiscipline == PlayerDiscipline.ALL) {
+            history
+        } else {
+            history.filter { it.discipline.equals(selectedDiscipline.key, ignoreCase = true) }
+        }
+
         playerTournamentsContainer.removeAllViews()
-        if (history.isEmpty()) {
+        if (filteredHistory.isEmpty()) {
             playerTournamentsEmpty.visibility = View.VISIBLE
+            playerTournamentsEmpty.text = if (history.isEmpty()) {
+                "Aucun tournoi enregistré pour ce joueur dans le flux actuel."
+            } else {
+                "Aucun tournoi en ${selectedDiscipline.label.lowercase(Locale.FRANCE)} pour ce joueur."
+            }
             return
         }
 
         playerTournamentsEmpty.visibility = View.GONE
         val inflater = LayoutInflater.from(this)
-        for (item in history) {
+        for (item in filteredHistory) {
             val row = inflater.inflate(R.layout.item_player_tournament, playerTournamentsContainer, false)
+            val discView = row.findViewById<TextView>(R.id.pt_discipline)
+            when (item.discipline.uppercase(Locale.FRANCE)) {
+                "DOUBLE" -> {
+                    discView.text = "DOUBLE"
+                    discView.setTextColor(0xFF047857.toInt())
+                    discView.setBackgroundResource(R.drawable.bg_crest_bruille)
+                }
+                "MIXED" -> {
+                    discView.text = "MIXTE"
+                    discView.setTextColor(0xFFB45309.toInt())
+                    discView.setBackgroundResource(R.drawable.bg_vpn_pill)
+                }
+                else -> {
+                    discView.text = "SIMPLE"
+                    discView.setTextColor(0xFF9D174D.toInt())
+                    discView.setBackgroundResource(R.drawable.bg_score_box)
+                }
+            }
             row.findViewById<TextView>(R.id.pt_tournament).text = item.tournament
             val meta = listOf(item.date, item.detail).filter { it.isNotBlank() }.joinToString(" · ")
             row.findViewById<TextView>(R.id.pt_meta).text = meta

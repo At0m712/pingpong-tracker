@@ -69,6 +69,7 @@ object MatchFeedParser {
                         date = hObj.optString("date", ""),
                         stage = hObj.optString("stage", ""),
                         detail = hObj.optString("detail", ""),
+                        discipline = hObj.optString("discipline", "SINGLE"),
                     )
                 )
             }
