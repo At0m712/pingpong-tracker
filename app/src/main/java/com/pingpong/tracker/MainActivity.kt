@@ -83,6 +83,7 @@ class MainActivity : Activity() {
     private lateinit var heroMatchCard: View
     private lateinit var heroKicker: TextView
     private lateinit var heroVpnBadge: TextView
+    private lateinit var heroLequipeBtn: TextView
     private lateinit var heroCountdown: TextView
     private lateinit var heroCrestHome: TextView
     private lateinit var heroHomeName: TextView
@@ -211,6 +212,7 @@ class MainActivity : Activity() {
         heroMatchCard = findViewById(R.id.hero_match_card)
         heroKicker = findViewById(R.id.hero_kicker)
         heroVpnBadge = findViewById(R.id.hero_vpn_badge)
+        heroLequipeBtn = findViewById(R.id.hero_lequipe_btn)
         heroCountdown = findViewById(R.id.hero_countdown)
         heroCrestHome = findViewById(R.id.hero_crest_home)
         heroHomeName = findViewById(R.id.hero_home_name)
@@ -433,6 +435,14 @@ class MainActivity : Activity() {
             heroVpnBadge.text = match.vpnNote.trim().ifEmpty { "VPN" }
         } else {
             heroVpnBadge.visibility = View.GONE
+        }
+
+        val lequipeLink = resolveLequipeUrl(match)
+        if (lequipeLink.isNotEmpty()) {
+            heroLequipeBtn.visibility = View.VISIBLE
+            heroLequipeBtn.setOnClickListener { openLequipeAppOrWeb(lequipeLink) }
+        } else {
+            heroLequipeBtn.visibility = View.GONE
         }
 
         bindCrest(heroCrestHome, match.home, trackedClubs)
@@ -813,6 +823,7 @@ class MainActivity : Activity() {
         val scoreAwayView = card.findViewById<TextView>(R.id.item_score_away)
         val metaView = card.findViewById<TextView>(R.id.item_meta)
         val vpnBadge = card.findViewById<TextView>(R.id.item_vpn_badge)
+        val lequipeBtn = card.findViewById<TextView>(R.id.item_lequipe_btn)
 
         val badgeType = MatchFormatter.badgeType(match, trackedClubs)
         accentBar.setBackgroundColor(MatchFormatter.badgeColorHex(badgeType))
@@ -867,8 +878,20 @@ class MainActivity : Activity() {
             vpnBadge.visibility = View.GONE
         }
 
+        val lequipeLink = resolveLequipeUrl(match)
+        if (lequipeLink.isNotEmpty()) {
+            lequipeBtn.visibility = View.VISIBLE
+            lequipeBtn.setOnClickListener { openLequipeAppOrWeb(lequipeLink) }
+        } else {
+            lequipeBtn.visibility = View.GONE
+        }
+
         card.setOnClickListener {
-            if (match.url.isNotBlank()) openUrl(match.url)
+            if (match.url.isNotBlank()) {
+                openUrl(match.url)
+            } else if (lequipeLink.isNotEmpty()) {
+                openLequipeAppOrWeb(lequipeLink)
+            }
         }
     }
 
@@ -1062,7 +1085,46 @@ class MainActivity : Activity() {
         renderAll()
     }
 
+    private fun resolveLequipeUrl(match: MatchItem): String {
+        if (match.lequipeUrl.isNotBlank()) return match.lequipeUrl.trim()
+        if (match.url.contains("lequipe.fr", ignoreCase = true)) return match.url.trim()
+        if (match.broadcast.contains("équipe", ignoreCase = true) ||
+            match.broadcast.contains("equipe", ignoreCase = true)
+        ) {
+            return LEQUIPE_LIVE_FALLBACK_URL
+        }
+        return ""
+    }
+
+    private fun openLequipeAppOrWeb(url: String) {
+        val uri = Uri.parse(url)
+        // Try launching directly inside the official L'Équipe Android app first
+        val appIntent = Intent(Intent.ACTION_VIEW, uri).apply {
+            setPackage(LEQUIPE_PACKAGE)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        try {
+            startActivity(appIntent)
+            return
+        } catch (_: Exception) {
+            // L'Équipe app not installed or deep-link rejected; fall back to browser
+        }
+        openUrl(url)
+    }
+
     private fun openUrl(url: String) {
+        if (url.contains("lequipe.fr", ignoreCase = true)) {
+            val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                setPackage(LEQUIPE_PACKAGE)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            try {
+                startActivity(appIntent)
+                return
+            } catch (_: Exception) {
+                // fallback to browser below
+            }
+        }
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
         } catch (_: Exception) {
@@ -1149,5 +1211,7 @@ class MainActivity : Activity() {
 
     companion object {
         private const val REQ_POST_NOTIFICATIONS = 1001
+        private const val LEQUIPE_PACKAGE = "fr.lequipe.lequipedetout"
+        private const val LEQUIPE_LIVE_FALLBACK_URL = "https://www.lequipe.fr/tv/"
     }
 }

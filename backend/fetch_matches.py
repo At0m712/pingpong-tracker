@@ -526,6 +526,10 @@ def main() -> int:
             vpn_req, vpn_note = detect_vpn(f"{m.get('competition', '')} {m.get('broadcast', '')}")
             m["vpn_required"] = vpn_req
             m["vpn_note"] = vpn_note
+        if "lequipe_url" not in m:
+            comp_bc = f"{m.get('competition', '')} {m.get('broadcast', '')}".lower()
+            if any(k in comp_bc for k in ("équipe", "equipe", "wtt finals", "wtt champions", "grand smash")):
+                m["lequipe_url"] = "https://www.lequipe.fr/tv/"
 
     payload = {
         "updated_at": updated_at,

@@ -10,8 +10,9 @@
       "status": "scheduled",
       "score": "",
       "followed": ["Félix Lebrun", "Alexis Lebrun"],
-      "broadcast": "RMC Sport / YouTube WTT",
+      "broadcast": "L'Équipe Live / YouTube WTT",
       "url": "https://www.youtube.com/@WTTGlobal/streams",
+      "lequipe_url": "https://www.lequipe.fr/tv/",
       "vpn_required": true,
       "vpn_note": "VPN requis (YouTube FR)"
     },

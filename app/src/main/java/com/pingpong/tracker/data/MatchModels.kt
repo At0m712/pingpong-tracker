@@ -28,6 +28,7 @@ data class MatchItem(
     val url: String,
     val vpnRequired: Boolean = false,
     val vpnNote: String = "",
+    val lequipeUrl: String = "",
 ) {
     val isLive: Boolean
         get() = status.equals(STATUS_LIVE, ignoreCase = true)

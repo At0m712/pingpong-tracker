@@ -163,16 +163,40 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Meta line (followed + broadcast) -->
-        <TextView
-            android:id="@+id/item_meta"
+        <!-- Meta line (followed + broadcast + optional L'Équipe direct app pill) -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#8A6B7B"
-            android:textSize="10.5sp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_meta"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#8A6B7B"
+                android:textSize="10.5sp" />
+
+            <TextView
+                android:id="@+id/item_lequipe_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_lequipe_pill"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="7dp"
+                android:paddingVertical="2dp"
+                android:text="L'ÉQUIPE ↗"
+                android:textColor="#FFFFFF"
+                android:textSize="8.5sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Right 1-tap Watch Cue -->

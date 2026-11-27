@@ -33,6 +33,7 @@ object MatchFeedParser {
                     url = obj.optString("url", ""),
                     vpnRequired = obj.optBoolean("vpn_required", false),
                     vpnNote = obj.optString("vpn_note", ""),
+                    lequipeUrl = obj.optString("lequipe_url", ""),
                 )
             )
         }
