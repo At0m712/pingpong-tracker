@@ -12,6 +12,7 @@ data class MatchFeed(
     val trackedClub: String,
     val matches: List<MatchItem>,
     val tournaments: List<TournamentBracket> = emptyList(),
+    val players: List<PlayerProfile> = emptyList(),
 )
 
 data class MatchItem(
@@ -123,3 +124,23 @@ enum class BadgeType {
     CLUB,
     INTL,
 }
+
+data class PlayerProfile(
+    val name: String,
+    val country: String = "FRA",
+    val club: String = "",
+    val worldRank: String = "—",
+    val winRate: String = "—",
+    val record: String = "",
+    val titles: String = "—",
+    val photoUrl: String = "",
+    val history: List<PlayerTournamentResult> = emptyList(),
+)
+
+data class PlayerTournamentResult(
+    val tournament: String,
+    val date: String,
+    val stage: String,
+    val detail: String = "",
+)
+

@@ -34,6 +34,9 @@ import com.pingpong.tracker.data.BracketMatch
 import com.pingpong.tracker.data.MatchFormatter
 import com.pingpong.tracker.data.MatchItem
 import com.pingpong.tracker.data.MatchStore
+import com.pingpong.tracker.data.PlayerPhotoLoader
+import com.pingpong.tracker.data.PlayerProfile
+import com.pingpong.tracker.data.PlayerTournamentResult
 import com.pingpong.tracker.data.TournamentBracket
 import com.pingpong.tracker.notifications.NotificationHelper
 import com.pingpong.tracker.ui.PinkDustBackgroundView
@@ -43,7 +46,7 @@ import java.util.Locale
 
 class MainActivity : Activity() {
 
-    private enum class Tab { MATCHES, CLUBS, BRACKET }
+    private enum class Tab { MATCHES, CLUBS, PLAYERS, BRACKET }
     private enum class MatchFilter(val label: String) {
         ALL("Tous"),
         LIVE("En direct"),
@@ -63,20 +66,25 @@ class MainActivity : Activity() {
     // Tab views
     private lateinit var tabMatchesView: View
     private lateinit var tabClubsView: View
+    private lateinit var tabPlayersView: View
     private lateinit var tabBracketView: View
 
     // Bottom nav
     private lateinit var navMatches: LinearLayout
     private lateinit var navClubs: LinearLayout
+    private lateinit var navPlayers: LinearLayout
     private lateinit var navBracket: LinearLayout
     private lateinit var navMatchesIndicator: View
     private lateinit var navClubsIndicator: View
+    private lateinit var navPlayersIndicator: View
     private lateinit var navBracketIndicator: View
     private lateinit var navMatchesIcon: ImageView
     private lateinit var navClubsIcon: ImageView
+    private lateinit var navPlayersIcon: ImageView
     private lateinit var navBracketIcon: ImageView
     private lateinit var navMatchesLabel: TextView
     private lateinit var navClubsLabel: TextView
+    private lateinit var navPlayersLabel: TextView
     private lateinit var navBracketLabel: TextView
 
     // Hero card
@@ -109,6 +117,21 @@ class MainActivity : Activity() {
     private lateinit var clubsEmptyText: TextView
     private lateinit var clubsMatchesContainer: LinearLayout
 
+    // Players tab
+    private lateinit var btnAddPlayer: View
+    private lateinit var playersChipsContainer: LinearLayout
+    private lateinit var playerAvatarFallback: TextView
+    private lateinit var playerAvatarPhoto: ImageView
+    private lateinit var playerCountryTag: TextView
+    private lateinit var playerNameTitle: TextView
+    private lateinit var playerClubSubtitle: TextView
+    private lateinit var statWorldRank: TextView
+    private lateinit var statWinRate: TextView
+    private lateinit var statWinLabel: TextView
+    private lateinit var statTitles: TextView
+    private lateinit var playerTournamentsEmpty: TextView
+    private lateinit var playerTournamentsContainer: LinearLayout
+
     // Bracket tab
     private lateinit var tournamentChipsContainer: LinearLayout
     private lateinit var tournamentHeaderCard: View
@@ -123,6 +146,7 @@ class MainActivity : Activity() {
     private var currentTab: Tab = Tab.MATCHES
     private var currentFilter: MatchFilter = MatchFilter.ALL
     private var selectedClub: String? = null
+    private var selectedPlayer: String? = null
     private var selectedTournamentId: String? = null
     private var heroMatch: MatchItem? = null
 
@@ -194,19 +218,24 @@ class MainActivity : Activity() {
 
         tabMatchesView = findViewById(R.id.tab_matches_view)
         tabClubsView = findViewById(R.id.tab_clubs_view)
+        tabPlayersView = findViewById(R.id.tab_players_view)
         tabBracketView = findViewById(R.id.tab_bracket_view)
 
         navMatches = findViewById(R.id.nav_matches)
         navClubs = findViewById(R.id.nav_clubs)
+        navPlayers = findViewById(R.id.nav_players)
         navBracket = findViewById(R.id.nav_bracket)
         navMatchesIndicator = findViewById(R.id.nav_matches_indicator)
         navClubsIndicator = findViewById(R.id.nav_clubs_indicator)
+        navPlayersIndicator = findViewById(R.id.nav_players_indicator)
         navBracketIndicator = findViewById(R.id.nav_bracket_indicator)
         navMatchesIcon = findViewById(R.id.nav_matches_icon)
         navClubsIcon = findViewById(R.id.nav_clubs_icon)
+        navPlayersIcon = findViewById(R.id.nav_players_icon)
         navBracketIcon = findViewById(R.id.nav_bracket_icon)
         navMatchesLabel = findViewById(R.id.nav_matches_label)
         navClubsLabel = findViewById(R.id.nav_clubs_label)
+        navPlayersLabel = findViewById(R.id.nav_players_label)
         navBracketLabel = findViewById(R.id.nav_bracket_label)
 
         heroMatchCard = findViewById(R.id.hero_match_card)
@@ -236,6 +265,20 @@ class MainActivity : Activity() {
         clubsEmptyText = findViewById(R.id.clubs_empty_text)
         clubsMatchesContainer = findViewById(R.id.clubs_matches_container)
 
+        btnAddPlayer = findViewById(R.id.btn_add_player)
+        playersChipsContainer = findViewById(R.id.players_chips_container)
+        playerAvatarFallback = findViewById(R.id.player_avatar_fallback)
+        playerAvatarPhoto = findViewById(R.id.player_avatar_photo)
+        playerCountryTag = findViewById(R.id.player_country_tag)
+        playerNameTitle = findViewById(R.id.player_name_title)
+        playerClubSubtitle = findViewById(R.id.player_club_subtitle)
+        statWorldRank = findViewById(R.id.stat_world_rank)
+        statWinRate = findViewById(R.id.stat_win_rate)
+        statWinLabel = findViewById(R.id.stat_win_label)
+        statTitles = findViewById(R.id.stat_titles)
+        playerTournamentsEmpty = findViewById(R.id.player_tournaments_empty)
+        playerTournamentsContainer = findViewById(R.id.player_tournaments_container)
+
         tournamentChipsContainer = findViewById(R.id.tournament_chips_container)
         tournamentHeaderCard = findViewById(R.id.tournament_header_card)
         tournamentCategory = findViewById(R.id.tournament_category)
@@ -257,33 +300,38 @@ class MainActivity : Activity() {
 
         navMatches.setOnClickListener { selectTab(Tab.MATCHES) }
         navClubs.setOnClickListener { selectTab(Tab.CLUBS) }
+        navPlayers.setOnClickListener { selectTab(Tab.PLAYERS) }
         navBracket.setOnClickListener { selectTab(Tab.BRACKET) }
 
         btnAddClub.setOnClickListener { showAddClubDialog() }
+        btnAddPlayer.setOnClickListener { showAddPlayerDialog() }
     }
 
     private fun selectTab(tab: Tab) {
         currentTab = tab
         tabMatchesView.visibility = if (tab == Tab.MATCHES) View.VISIBLE else View.GONE
         tabClubsView.visibility = if (tab == Tab.CLUBS) View.VISIBLE else View.GONE
+        tabPlayersView.visibility = if (tab == Tab.PLAYERS) View.VISIBLE else View.GONE
         tabBracketView.visibility = if (tab == Tab.BRACKET) View.VISIBLE else View.GONE
 
         val activeView = when (tab) {
             Tab.MATCHES -> tabMatchesView
             Tab.CLUBS -> tabClubsView
+            Tab.PLAYERS -> tabPlayersView
             Tab.BRACKET -> tabBracketView
         }
         activeView.alpha = 0f
-        activeView.translationY = dp(12).toFloat()
+        activeView.translationY = dp(10).toFloat()
         activeView.animate()
             .alpha(1f)
             .translationY(0f)
-            .setDuration(220L)
+            .setDuration(180L)
             .setInterpolator(DecelerateInterpolator())
             .start()
 
         updateNavItem(navMatchesIndicator, navMatchesIcon, navMatchesLabel, tab == Tab.MATCHES)
         updateNavItem(navClubsIndicator, navClubsIcon, navClubsLabel, tab == Tab.CLUBS)
+        updateNavItem(navPlayersIndicator, navPlayersIcon, navPlayersLabel, tab == Tab.PLAYERS)
         updateNavItem(navBracketIndicator, navBracketIcon, navBracketLabel, tab == Tab.BRACKET)
     }
 
@@ -324,6 +372,7 @@ class MainActivity : Activity() {
 
         renderMatchesTab(visibleMatches, trackedClubs)
         renderClubsTab(allMatches, trackedClubs)
+        renderPlayersTab(feed?.players.orEmpty(), allMatches, feed?.tournaments.orEmpty())
         renderBracketTab(feed?.tournaments.orEmpty(), allMatches, trackedClubs)
     }
 
@@ -637,6 +686,217 @@ class MainActivity : Activity() {
             .setPositiveButton("Retirer") { _, _ ->
                 store.removeTrackedClub(club)
                 PingPongWidgetProvider.updateAllWidgets(this)
+                renderAll()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+    // endregion
+
+    // region TAB 3: PLAYERS (Photo, Stats & Tournament History)
+    private fun renderPlayersTab(
+        feedPlayers: List<PlayerProfile>,
+        allMatches: List<MatchItem>,
+        tournaments: List<TournamentBracket>,
+    ) {
+        val trackedPlayers = store.getTrackedPlayers()
+        if (selectedPlayer == null || trackedPlayers.none { it.equals(selectedPlayer, ignoreCase = true) }) {
+            selectedPlayer = trackedPlayers.firstOrNull()
+        }
+
+        playersChipsContainer.removeAllViews()
+        for (player in trackedPlayers) {
+            val isSelected = selectedPlayer?.equals(player, ignoreCase = true) == true
+            val canRemove = trackedPlayers.size > 1
+            playersChipsContainer.addView(
+                createPillChip(
+                    text = player,
+                    active = isSelected,
+                    removable = canRemove,
+                    onClick = {
+                        selectedPlayer = player
+                        renderPlayersTab(feedPlayers, allMatches, tournaments)
+                    },
+                    onRemove = { confirmRemovePlayer(player) },
+                )
+            )
+        }
+
+        val currentName = selectedPlayer ?: return
+        val profile = feedPlayers.firstOrNull { it.name.equals(currentName, ignoreCase = true) }
+            ?: PlayerProfile(name = currentName)
+
+        // Face photo + monogram fallback
+        playerAvatarFallback.text = monogramFor(currentName)
+        PlayerPhotoLoader.loadInto(
+            context = this,
+            playerName = currentName,
+            explicitUrl = profile.photoUrl,
+            imageView = playerAvatarPhoto,
+            fallbackView = playerAvatarFallback,
+        )
+
+        playerCountryTag.text = profile.country.ifBlank { "WTT" }.uppercase(Locale.FRANCE)
+        playerNameTitle.text = currentName
+        playerClubSubtitle.text = profile.club.ifBlank { "Circuit WTT / International" }
+
+        statWorldRank.text = profile.worldRank.ifBlank { "—" }
+        statWinRate.text = profile.winRate.ifBlank { "—" }
+        statWinLabel.text = profile.record.ifBlank { "VICTOIRES" }.uppercase(Locale.FRANCE)
+        statTitles.text = profile.titles.ifBlank { "—" }
+
+        // Combine explicit tournament history + any tournament bracket appearances
+        val history = ArrayList<PlayerTournamentResult>(profile.history)
+        if (history.isEmpty()) {
+            val needle = currentName.lowercase(Locale.FRANCE)
+            for (t in tournaments) {
+                val appeared = t.rounds.any { r ->
+                    r.matches.any { m ->
+                        m.player1.lowercase(Locale.FRANCE).contains(needle) ||
+                            m.player2.lowercase(Locale.FRANCE).contains(needle)
+                    }
+                }
+                if (appeared) {
+                    history.add(
+                        PlayerTournamentResult(
+                            tournament = t.name,
+                            date = t.dates.ifBlank { "2026" },
+                            stage = "Qualifié",
+                            detail = t.location,
+                        )
+                    )
+                }
+            }
+            for (m in allMatches) {
+                if (m.home.lowercase(Locale.FRANCE).contains(needle) ||
+                    m.away.lowercase(Locale.FRANCE).contains(needle)
+                ) {
+                    if (history.none { it.tournament.equals(m.competition, ignoreCase = true) }) {
+                        history.add(
+                            PlayerTournamentResult(
+                                tournament = m.competition,
+                                date = MatchFormatter.formatCountdown(m),
+                                stage = if (m.isFinished) m.score.ifBlank { "Joué" } else "À venir",
+                                detail = "${m.home} vs ${m.away}",
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        playerTournamentsContainer.removeAllViews()
+        if (history.isEmpty()) {
+            playerTournamentsEmpty.visibility = View.VISIBLE
+            return
+        }
+
+        playerTournamentsEmpty.visibility = View.GONE
+        val inflater = LayoutInflater.from(this)
+        for (item in history) {
+            val row = inflater.inflate(R.layout.item_player_tournament, playerTournamentsContainer, false)
+            row.findViewById<TextView>(R.id.pt_tournament).text = item.tournament
+            val meta = listOf(item.date, item.detail).filter { it.isNotBlank() }.joinToString(" · ")
+            row.findViewById<TextView>(R.id.pt_meta).text = meta
+
+            val stageView = row.findViewById<TextView>(R.id.pt_stage)
+            stageView.text = item.stage
+            val stageLower = item.stage.lowercase(Locale.FRANCE)
+            when {
+                stageLower.contains("vainqueur") || stageLower.contains("titre") || stageLower.contains("1er") -> {
+                    stageView.setBackgroundResource(R.drawable.bg_button_gold)
+                    stageView.setTextColor(0xFFFFFFFF.toInt())
+                }
+                stageLower.contains("finale") && !stageLower.contains("1/2") && !stageLower.contains("1/4") -> {
+                    stageView.setBackgroundResource(R.drawable.bg_live_pill)
+                    stageView.setTextColor(0xFFBE123C.toInt())
+                }
+                stageLower.contains("1/2") -> {
+                    stageView.setBackgroundResource(R.drawable.bg_crest_bruille)
+                    stageView.setTextColor(0xFF047857.toInt())
+                }
+                else -> {
+                    stageView.setBackgroundResource(R.drawable.bg_score_box)
+                    stageView.setTextColor(0xFF9D174D.toInt())
+                }
+            }
+            playerTournamentsContainer.addView(row)
+        }
+    }
+
+    private fun showAddPlayerDialog() {
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_add_player, null)
+        val input = view.findViewById<EditText>(R.id.add_player_input)
+        val btnConfirm = view.findViewById<Button>(R.id.add_player_confirm)
+        val suggestionsContainer = view.findViewById<LinearLayout>(R.id.add_player_suggestions)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+
+        val tracked = store.getTrackedPlayers()
+        for (player in MatchStore.SUGGESTED_PLAYERS) {
+            val alreadyAdded = tracked.any { it.equals(player, ignoreCase = true) }
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(12), dp(10), dp(12), dp(10))
+                setBackgroundResource(R.drawable.bg_surface_card)
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                ).apply { bottomMargin = dp(6) }
+            }
+            val label = TextView(this).apply {
+                text = player
+                setTextColor(if (alreadyAdded) 0xFFA08493.toInt() else 0xFF1E1118.toInt())
+                textSize = 13f
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            val badge = TextView(this).apply {
+                text = if (alreadyAdded) "Suivi" else "+ Suivre"
+                setTextColor(if (alreadyAdded) 0xFF059669.toInt() else 0xFFDB2777.toInt())
+                textSize = 12f
+                setTypeface(null, Typeface.BOLD)
+            }
+            row.addView(label)
+            row.addView(badge)
+
+            if (!alreadyAdded) {
+                row.setOnClickListener {
+                    store.addTrackedPlayer(player)
+                    selectedPlayer = player
+                    renderAll()
+                    dialog.dismiss()
+                }
+            }
+            suggestionsContainer.addView(row)
+        }
+
+        btnConfirm.setOnClickListener {
+            val name = input.text.toString().trim()
+            if (name.length < 2) {
+                Toast.makeText(this, "Nom de joueur trop court.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (store.addTrackedPlayer(name)) {
+                selectedPlayer = name
+                renderAll()
+                dialog.dismiss()
+            } else {
+                Toast.makeText(this, "Ce joueur est déjà suivi.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun confirmRemovePlayer(player: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Retirer $player ?")
+            .setMessage("Ce joueur sera retiré de votre liste de profils suivis.")
+            .setPositiveButton("Retirer") { _, _ ->
+                store.removeTrackedPlayer(player)
                 renderAll()
             }
             .setNegativeButton("Annuler", null)

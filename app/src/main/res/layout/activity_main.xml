@@ -619,7 +619,291 @@
                 </LinearLayout>
             </ScrollView>
 
-            <!-- TAB 3: TABLEAUX / COMPÉTITIONS INTER -->
+            <!-- TAB 3: JOUEURS (Profil, Photo, Stats & Tournois joués) -->
+            <ScrollView
+                android:id="@+id/tab_players_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Header + Add Player Button -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:letterSpacing="0.1"
+                            android:text="MES JOUEURS SUIVIS"
+                            android:textColor="#DB2777"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/btn_add_player"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_button_gold"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp">
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:layout_marginEnd="4dp"
+                                android:src="@drawable/ic_plus"
+                                android:tint="#FFFFFF" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ajouter"
+                                android:textColor="#FFFFFF"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Player Selector Chips -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="14dp"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/players_chips_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+
+                    <!-- Player Profile Hero Card (Face Photo + Identity + 3 Quick Stats) -->
+                    <LinearLayout
+                        android:id="@+id/player_profile_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/bg_hero_card"
+                        android:elevation="3dp"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <!-- Portrait Photo or Monogram Fallback -->
+                            <FrameLayout
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:layout_marginEnd="14dp">
+
+                                <TextView
+                                    android:id="@+id/player_avatar_fallback"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/bg_crest_france"
+                                    android:gravity="center"
+                                    android:text="FL"
+                                    android:textColor="#BE185D"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <ImageView
+                                    android:id="@+id/player_avatar_photo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:contentDescription="Photo du joueur"
+                                    android:scaleType="centerCrop"
+                                    android:visibility="gone" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/player_country_tag"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:letterSpacing="0.1"
+                                    android:text="FRA"
+                                    android:textColor="#DB2777"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/player_name_title"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="Félix Lebrun"
+                                    android:textColor="#1E1118"
+                                    android:textSize="19sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/player_club_subtitle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:textColor="#7A5C6B"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- 3 Compact Stats Tiles -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_surface_card"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="10dp">
+
+                                <TextView
+                                    android:id="@+id/stat_world_rank"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="monospace"
+                                    android:text="—"
+                                    android:textColor="#DB2777"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="MONDIAL"
+                                    android:textColor="#8A6B7B"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="3dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_surface_card"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="10dp">
+
+                                <TextView
+                                    android:id="@+id/stat_win_rate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="monospace"
+                                    android:text="—"
+                                    android:textColor="#059669"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/stat_win_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="VICTOIRES"
+                                    android:textColor="#8A6B7B"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_surface_card"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="10dp">
+
+                                <TextView
+                                    android:id="@+id/stat_titles"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="monospace"
+                                    android:text="—"
+                                    android:textColor="#1E1118"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="TITRES 2026"
+                                    android:textColor="#8A6B7B"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Tournaments Played Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:letterSpacing="0.1"
+                        android:text="TOURNOIS DÉJÀ JOUÉS"
+                        android:textColor="#7A5C6B"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/player_tournaments_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_surface_card"
+                        android:gravity="center"
+                        android:padding="22dp"
+                        android:text="Aucun tournoi enregistré pour ce joueur dans le flux actuel."
+                        android:textColor="#7A5C6B"
+                        android:textSize="12.5sp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/player_tournaments_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!-- TAB 4: TABLEAUX / COMPÉTITIONS INTER -->
             <ScrollView
                 android:id="@+id/tab_bracket_view"
                 android:layout_width="match_parent"
@@ -825,6 +1109,41 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="Clubs"
+                        android:textColor="#A08493"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/nav_players"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <View
+                        android:id="@+id/nav_players_indicator"
+                        android:layout_width="24dp"
+                        android:layout_height="2.5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="#EC4899"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/nav_players_icon"
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:src="@drawable/ic_tab_players"
+                        android:tint="#A08493" />
+
+                    <TextView
+                        android:id="@+id/nav_players_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Joueurs"
                         android:textColor="#A08493"
                         android:textSize="10sp" />
                 </LinearLayout>

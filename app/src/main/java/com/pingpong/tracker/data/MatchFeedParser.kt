@@ -39,6 +39,7 @@ object MatchFeedParser {
         }
 
         val tournaments = parseTournaments(root.optJSONArray("tournaments"))
+        val players = parsePlayers(root.optJSONArray("players"))
 
         return MatchFeed(
             updatedAt = updatedAt,
@@ -47,7 +48,45 @@ object MatchFeedParser {
             trackedClub = trackedClub,
             matches = matches,
             tournaments = tournaments,
+            players = players,
         )
+    }
+
+    private fun parsePlayers(array: JSONArray?): List<PlayerProfile> {
+        if (array == null) return emptyList()
+        val list = ArrayList<PlayerProfile>(array.length())
+        for (i in 0 until array.length()) {
+            val obj = array.optJSONObject(i) ?: continue
+            val name = obj.optString("name", "").trim()
+            if (name.isEmpty()) continue
+            val histArr = obj.optJSONArray("history") ?: JSONArray()
+            val history = ArrayList<PlayerTournamentResult>(histArr.length())
+            for (j in 0 until histArr.length()) {
+                val hObj = histArr.optJSONObject(j) ?: continue
+                history.add(
+                    PlayerTournamentResult(
+                        tournament = hObj.optString("tournament", ""),
+                        date = hObj.optString("date", ""),
+                        stage = hObj.optString("stage", ""),
+                        detail = hObj.optString("detail", ""),
+                    )
+                )
+            }
+            list.add(
+                PlayerProfile(
+                    name = name,
+                    country = obj.optString("country", "FRA"),
+                    club = obj.optString("club", ""),
+                    worldRank = obj.optString("world_rank", "—"),
+                    winRate = obj.optString("win_rate", "—"),
+                    record = obj.optString("record", ""),
+                    titles = obj.optString("titles", "—"),
+                    photoUrl = obj.optString("photo_url", ""),
+                    history = history,
+                )
+            )
+        }
+        return list
     }
 
     private fun parseTournaments(array: JSONArray?): List<TournamentBracket> {

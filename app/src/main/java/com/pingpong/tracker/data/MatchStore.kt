@@ -73,6 +73,52 @@ class MatchStore(context: Context) {
         prefs.edit().putString(KEY_TRACKED_CLUBS, arr.toString()).apply()
     }
 
+    fun getTrackedPlayers(): List<String> {
+        val raw = prefs.getString(KEY_TRACKED_PLAYERS, null)
+        if (raw.isNullOrBlank()) {
+            return DEFAULT_PLAYERS
+        }
+        return try {
+            val arr = JSONArray(raw)
+            val result = ArrayList<String>(arr.length())
+            for (i in 0 until arr.length()) {
+                val p = arr.optString(i, "").trim()
+                if (p.isNotEmpty()) result.add(p)
+            }
+            if (result.isEmpty()) DEFAULT_PLAYERS else result
+        } catch (_: Exception) {
+            DEFAULT_PLAYERS
+        }
+    }
+
+    fun addTrackedPlayer(playerName: String): Boolean {
+        val cleaned = playerName.trim()
+        if (cleaned.isEmpty()) return false
+        val current = getTrackedPlayers().toMutableList()
+        if (current.any { it.equals(cleaned, ignoreCase = true) }) {
+            return false
+        }
+        current.add(cleaned)
+        saveTrackedPlayers(current)
+        return true
+    }
+
+    fun removeTrackedPlayer(playerName: String): Boolean {
+        val current = getTrackedPlayers().toMutableList()
+        if (current.size <= 1) return false
+        val removed = current.removeAll { it.equals(playerName, ignoreCase = true) }
+        if (removed) {
+            saveTrackedPlayers(current)
+        }
+        return removed
+    }
+
+    private fun saveTrackedPlayers(players: List<String>) {
+        val arr = JSONArray()
+        for (p in players) arr.put(p)
+        prefs.edit().putString(KEY_TRACKED_PLAYERS, arr.toString()).apply()
+    }
+
     fun saveFeedJson(rawJson: String, syncEpochMs: Long = System.currentTimeMillis()) {
         prefs.edit()
             .putString(KEY_CACHED_JSON, rawJson)
@@ -165,6 +211,30 @@ class MatchStore(context: Context) {
 
         val DEFAULT_CLUBS = listOf("CTT Bruille")
 
+        val DEFAULT_PLAYERS = listOf(
+            "Félix Lebrun",
+            "Alexis Lebrun",
+            "Flavien Coton",
+            "Thibault Poret",
+            "Simon Gauzy",
+        )
+
+        val SUGGESTED_PLAYERS = listOf(
+            "Félix Lebrun",
+            "Alexis Lebrun",
+            "Flavien Coton",
+            "Thibault Poret",
+            "Simon Gauzy",
+            "Lin Shidong",
+            "Wang Chuqin",
+            "Truls Möregårdh",
+            "Hugo Calderano",
+            "Tomokazu Harimoto",
+            "Fan Zhendong",
+            "Prithika Pavade",
+            "Jia Nan Yuan",
+        )
+
         val SUGGESTED_CLUBS = listOf(
             "CTT Bruille",
             "SPO Rouen",
@@ -183,6 +253,7 @@ class MatchStore(context: Context) {
 
         const val KEY_FEED_URL = "feed_url"
         const val KEY_TRACKED_CLUBS = "tracked_clubs"
+        const val KEY_TRACKED_PLAYERS = "tracked_players"
         const val KEY_CACHED_JSON = "cached_json"
         const val KEY_LAST_SYNC_MS = "last_sync_ms"
         const val KEY_LAST_ERROR = "last_error"

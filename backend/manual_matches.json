@@ -172,5 +172,118 @@
         }
       ]
     }
+  ],
+  "players": [
+    {
+      "name": "Félix Lebrun",
+      "country": "FRA",
+      "club": "Alliance Nîmes/Montpellier",
+      "world_rank": "#4",
+      "win_rate": "78%",
+      "record": "39V - 11D",
+      "titles": "3",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/2 finale", "detail": "Sud de France Arena" },
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/4 finale", "detail": "Süwag Energie Arena" },
+        { "tournament": "WTT China Smash", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "Pékin, Chine" },
+        { "tournament": "Europe Top 16 Cup", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Montreux, Suisse" },
+        { "tournament": "WTT Star Contender Doha", "date": "Jan. 2026", "stage": "Finale", "detail": "Lusail, Qatar" }
+      ]
+    },
+    {
+      "name": "Alexis Lebrun",
+      "country": "FRA",
+      "club": "Alliance Nîmes/Montpellier",
+      "world_rank": "#11",
+      "win_rate": "73%",
+      "record": "33V - 12D",
+      "titles": "2",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "1/2 finale", "detail": "Oman" },
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "Montpellier, France" },
+        { "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Simple & Double" },
+        { "tournament": "WTT Contender Zagreb", "date": "Juin 2026", "stage": "Vainqueur", "detail": "Croatie" }
+      ]
+    },
+    {
+      "name": "Flavien Coton",
+      "country": "FRA",
+      "club": "CTT Bruille",
+      "world_rank": "#68",
+      "win_rate": "69%",
+      "record": "27V - 12D",
+      "titles": "2",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Feeder Düsseldorf", "date": "Nov. 2026", "stage": "1/2 finale", "detail": "Allemagne" },
+        { "tournament": "WTT Feeder Lille", "date": "Oct. 2026", "stage": "Finale", "detail": "France" },
+        { "tournament": "WTT Youth Star Contender", "date": "Sept. 2026", "stage": "Vainqueur", "detail": "U19 Simple" },
+        { "tournament": "Pro A Messieurs · Phase aller", "date": "2026", "stage": "CTT Bruille", "detail": "Titulaire Pro A" }
+      ]
+    },
+    {
+      "name": "Thibault Poret",
+      "country": "FRA",
+      "club": "CTT Bruille",
+      "world_rank": "#54",
+      "win_rate": "67%",
+      "record": "24V - 12D",
+      "titles": "1",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Contender Tunis", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "Tunisie" },
+        { "tournament": "WTT Feeder Olomouc", "date": "Août 2026", "stage": "1/2 finale", "detail": "République tchèque" },
+        { "tournament": "WTT Feeder Otočec", "date": "Avr. 2026", "stage": "Vainqueur", "detail": "Slovénie" },
+        { "tournament": "Pro A Messieurs · Phase aller", "date": "2026", "stage": "CTT Bruille", "detail": "Titulaire Pro A" }
+      ]
+    },
+    {
+      "name": "Simon Gauzy",
+      "country": "FRA",
+      "club": "TTF Liebherr Ochsenhausen",
+      "world_rank": "#22",
+      "win_rate": "68%",
+      "record": "28V - 13D",
+      "titles": "1",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/8 finale", "detail": "Allemagne" },
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "France" },
+        { "tournament": "WTT Star Contender Ljubljana", "date": "Juin 2026", "stage": "1/4 finale", "detail": "Slovénie" },
+        { "tournament": "WTT Contender Mendoza", "date": "Mai 2026", "stage": "1/2 finale", "detail": "Argentine" }
+      ]
+    },
+    {
+      "name": "Truls Möregårdh",
+      "country": "SWE",
+      "club": "Eslövs AI BTK",
+      "world_rank": "#7",
+      "win_rate": "75%",
+      "record": "34V - 11D",
+      "titles": "2",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/2 finale", "detail": "Allemagne" },
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "France" },
+        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "Suède" }
+      ]
+    },
+    {
+      "name": "Lin Shidong",
+      "country": "CHN",
+      "club": "Équipe de Chine",
+      "world_rank": "#1",
+      "win_rate": "86%",
+      "record": "48V - 8D",
+      "titles": "5",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Vainqueur", "detail": "Allemagne" },
+        { "tournament": "WTT China Smash", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Pékin, Chine" },
+        { "tournament": "WTT Champions Macao", "date": "Sept. 2026", "stage": "Vainqueur", "detail": "Macao" }
+      ]
+    }
   ]
 }
