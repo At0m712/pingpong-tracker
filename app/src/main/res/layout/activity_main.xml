@@ -110,6 +110,81 @@
             android:textSize="12sp"
             android:visibility="gone" />
 
+        <!-- Ergonomic 1-Tap Quick Actions Bar -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/quick_btn_sync"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip_inactive"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="13dp"
+                    android:text="↻ Synchro"
+                    android:textColor="#9D174D"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/quick_btn_widget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip_inactive"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="13dp"
+                    android:text="+ Widget"
+                    android:textColor="#9D174D"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/quick_btn_notifs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_chip_inactive"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="13dp"
+                    android:text="Alertes"
+                    android:textColor="#9D174D"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/quick_btn_club"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_button_gold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="13dp"
+                    android:text="+ Club"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
         <!-- Main Scrollable Content -->
         <FrameLayout
             android:layout_width="match_parent"
@@ -132,18 +207,18 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="18dp">
 
-                    <!-- Hero Spotlight Match Card (Frosted Pearl & Rose) -->
+                    <!-- Hero Spotlight Match Card (Compact Frosted Pearl & Rose) -->
                     <LinearLayout
                         android:id="@+id/hero_match_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         android:background="@drawable/bg_hero_card"
                         android:clickable="true"
-                        android:elevation="4dp"
+                        android:elevation="3dp"
                         android:focusable="true"
                         android:orientation="vertical"
-                        android:padding="18dp"
+                        android:padding="14dp"
                         android:visibility="gone">
 
                         <LinearLayout

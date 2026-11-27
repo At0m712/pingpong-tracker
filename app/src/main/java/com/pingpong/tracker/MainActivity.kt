@@ -249,6 +249,11 @@ class MainActivity : Activity() {
         btnHeaderRefresh.setOnClickListener { triggerManualSync() }
         btnHeaderSettings.setOnClickListener { showSettingsDialog() }
 
+        findViewById<View>(R.id.quick_btn_sync).setOnClickListener { triggerManualSync() }
+        findViewById<View>(R.id.quick_btn_widget).setOnClickListener { requestPinWidget() }
+        findViewById<View>(R.id.quick_btn_notifs).setOnClickListener { showSettingsDialog() }
+        findViewById<View>(R.id.quick_btn_club).setOnClickListener { showAddClubDialog() }
+
         navMatches.setOnClickListener { selectTab(Tab.MATCHES) }
         navClubs.setOnClickListener { selectTab(Tab.CLUBS) }
         navBracket.setOnClickListener { selectTab(Tab.BRACKET) }
@@ -368,10 +373,44 @@ class MainActivity : Activity() {
 
         matchesEmptyText.visibility = View.GONE
         val inflater = LayoutInflater.from(this)
-        for (match in filtered) {
-            val card = inflater.inflate(R.layout.item_match, matchesListContainer, false)
-            bindMatchCard(card, match, trackedClubs)
-            matchesListContainer.addView(card)
+        val liveList = filtered.filter { it.isLive }
+        val upcomingList = filtered.filter { it.isScheduled }
+        val finishedList = filtered.filter { it.isFinished }
+
+        if (liveList.isNotEmpty()) {
+            matchesListContainer.addView(createSectionHeader("EN DIRECT (${liveList.size})", 0xFFE11D48.toInt()))
+            for (match in liveList) {
+                val card = inflater.inflate(R.layout.item_match, matchesListContainer, false)
+                bindMatchCard(card, match, trackedClubs)
+                matchesListContainer.addView(card)
+            }
+        }
+        if (upcomingList.isNotEmpty()) {
+            matchesListContainer.addView(createSectionHeader("À VENIR (${upcomingList.size})", 0xFFDB2777.toInt()))
+            for (match in upcomingList) {
+                val card = inflater.inflate(R.layout.item_match, matchesListContainer, false)
+                bindMatchCard(card, match, trackedClubs)
+                matchesListContainer.addView(card)
+            }
+        }
+        if (finishedList.isNotEmpty()) {
+            matchesListContainer.addView(createSectionHeader("TERMINÉS (${finishedList.size})", 0xFF8A6B7B.toInt()))
+            for (match in finishedList) {
+                val card = inflater.inflate(R.layout.item_match, matchesListContainer, false)
+                bindMatchCard(card, match, trackedClubs)
+                matchesListContainer.addView(card)
+            }
+        }
+    }
+
+    private fun createSectionHeader(title: String, color: Int): TextView {
+        return TextView(this).apply {
+            text = title
+            setTextColor(color)
+            textSize = 10f
+            letterSpacing = 0.08f
+            setTypeface(null, Typeface.BOLD)
+            setPadding(dp(4), dp(8), dp(4), dp(6))
         }
     }
 
