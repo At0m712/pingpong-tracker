@@ -178,111 +178,125 @@
       "name": "Félix Lebrun",
       "country": "FRA",
       "club": "Alliance Nîmes/Montpellier",
-      "world_rank": "#4",
-      "win_rate": "78%",
-      "record": "39V - 11D",
-      "titles": "3",
+      "world_rank": "#2",
+      "win_rate": "82%",
+      "record": "Saison 2026",
+      "titles": "4",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/2 finale", "detail": "Sud de France Arena" },
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/4 finale", "detail": "Süwag Energie Arena" },
-        { "tournament": "WTT China Smash", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "Pékin, Chine" },
-        { "tournament": "Europe Top 16 Cup", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Montreux, Suisse" },
-        { "tournament": "WTT Star Contender Doha", "date": "Jan. 2026", "stage": "Finale", "detail": "Lusail, Qatar" }
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "Bat A. Lind 3-0 · 1-3 vs Zhou Qihao" },
+        { "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec A. Lebrun)" },
+        { "tournament": "WTT Champions Yokohama", "date": "Août 2026", "stage": "1/4 finale", "detail": "Japon" },
+        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "1er Français vainqueur d'un Smash · + Double" },
+        { "tournament": "United States Smash", "date": "Juil. 2026", "stage": "1/2 finale", "detail": "Los Angeles · bat A. Lebrun 4-2 en 1/4" },
+        { "tournament": "WTT Champions Chongqing", "date": "Mars 2026", "stage": "Vainqueur", "detail": "Bat Wen Ruibo 4-1 en finale" },
+        { "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec A. Lebrun)" }
       ]
     },
     {
       "name": "Alexis Lebrun",
       "country": "FRA",
       "club": "Alliance Nîmes/Montpellier",
-      "world_rank": "#11",
-      "win_rate": "73%",
-      "record": "33V - 12D",
-      "titles": "2",
+      "world_rank": "#9",
+      "win_rate": "75%",
+      "record": "Saison 2026",
+      "titles": "3",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "1/2 finale", "detail": "Oman" },
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "Montpellier, France" },
-        { "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Simple & Double" },
-        { "tournament": "WTT Contender Zagreb", "date": "Juin 2026", "stage": "Vainqueur", "detail": "Croatie" }
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "2-3 vs Patrick Franziska" },
+        { "tournament": "Championnats d'Europe", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec F. Lebrun)" },
+        { "tournament": "WTT Champions Yokohama", "date": "Août 2026", "stage": "1/4 finale", "detail": "Japon" },
+        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "Double Messieurs (3-0 en finale)" },
+        { "tournament": "United States Smash", "date": "Juil. 2026", "stage": "1/4 finale", "detail": "Los Angeles · 2-4 vs Félix Lebrun" },
+        { "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Double Messieurs (avec F. Lebrun)" }
       ]
     },
     {
       "name": "Flavien Coton",
       "country": "FRA",
       "club": "CTT Bruille",
-      "world_rank": "#68",
-      "win_rate": "69%",
-      "record": "27V - 12D",
-      "titles": "2",
+      "world_rank": "#58",
+      "win_rate": "68%",
+      "record": "Saison 2026",
+      "titles": "1",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Feeder Düsseldorf", "date": "Nov. 2026", "stage": "1/2 finale", "detail": "Allemagne" },
-        { "tournament": "WTT Feeder Lille", "date": "Oct. 2026", "stage": "Finale", "detail": "France" },
-        { "tournament": "WTT Youth Star Contender", "date": "Sept. 2026", "stage": "Vainqueur", "detail": "U19 Simple" },
-        { "tournament": "Pro A Messieurs · Phase aller", "date": "2026", "stage": "CTT Bruille", "detail": "Titulaire Pro A" }
+        { "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "1/4 finale", "detail": "Oman · 2-3 vs Park Ganghyeon" },
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/16 finale", "detail": "0-3 vs Tomislav Pucar" },
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "2-3 vs Jang Woo-jin (futur vainqueur)" },
+        { "tournament": "Pro A Messieurs 2026-27", "date": "Sept.–Nov. 2026", "stage": "CTT Bruille", "detail": "Phase aller Pro A" }
       ]
     },
     {
       "name": "Thibault Poret",
       "country": "FRA",
-      "club": "CTT Bruille",
-      "world_rank": "#54",
-      "win_rate": "67%",
-      "record": "24V - 12D",
+      "club": "SPO Rouen / Équipe de France",
+      "world_rank": "#28",
+      "win_rate": "69%",
+      "record": "Saison 2026",
       "titles": "1",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Contender Tunis", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "Tunisie" },
-        { "tournament": "WTT Feeder Olomouc", "date": "Août 2026", "stage": "1/2 finale", "detail": "République tchèque" },
-        { "tournament": "WTT Feeder Otočec", "date": "Avr. 2026", "stage": "Vainqueur", "detail": "Slovénie" },
-        { "tournament": "Pro A Messieurs · Phase aller", "date": "2026", "stage": "CTT Bruille", "detail": "Titulaire Pro A" }
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/16 finale", "detail": "0-3 vs Zhou Qihao" },
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "0-3 vs Truls Möregårdh" },
+        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Tableau", "detail": "Suède" },
+        { "tournament": "WTT Star Contender Astana", "date": "2026", "stage": "Tableau", "detail": "Kazakhstan" }
       ]
     },
     {
       "name": "Simon Gauzy",
       "country": "FRA",
       "club": "TTF Liebherr Ochsenhausen",
-      "world_rank": "#22",
-      "win_rate": "68%",
-      "record": "28V - 13D",
-      "titles": "1",
+      "world_rank": "#29",
+      "win_rate": "66%",
+      "record": "Saison 2026",
+      "titles": "0",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/8 finale", "detail": "Allemagne" },
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "France" },
-        { "tournament": "WTT Star Contender Ljubljana", "date": "Juin 2026", "stage": "1/4 finale", "detail": "Slovénie" },
-        { "tournament": "WTT Contender Mendoza", "date": "Mai 2026", "stage": "1/2 finale", "detail": "Argentine" }
+        { "tournament": "WTT Star Contender Mascate", "date": "Nov. 2026", "stage": "Tableau", "detail": "Oman" },
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Tableau", "detail": "Allemagne" },
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/8 finale", "detail": "Exploit 3-0 vs T. Harimoto · 2-3 vs Liang Jingkun" }
       ]
     },
     {
       "name": "Truls Möregårdh",
       "country": "SWE",
       "club": "Eslövs AI BTK",
-      "world_rank": "#7",
-      "win_rate": "75%",
-      "record": "34V - 11D",
-      "titles": "2",
+      "world_rank": "#6",
+      "win_rate": "76%",
+      "record": "Saison 2026",
+      "titles": "1",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "1/2 finale", "detail": "Allemagne" },
-        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/4 finale", "detail": "France" },
-        { "tournament": "Europe Smash Malmö", "date": "Août 2026", "stage": "Vainqueur", "detail": "Suède" }
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "Tableau", "detail": "Bat Thibault Poret 3-0 au 1er tour" },
+        { "tournament": "WTT Champions Macao", "date": "Sept. 2026", "stage": "Vainqueur", "detail": "Bat Hugo Calderano 4-1 en finale" }
       ]
     },
     {
-      "name": "Lin Shidong",
+      "name": "Tomokazu Harimoto",
+      "country": "JPN",
+      "club": "Équipe du Japon",
+      "world_rank": "#3",
+      "win_rate": "78%",
+      "record": "Saison 2026",
+      "titles": "1",
+      "photo_url": "",
+      "history": [
+        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Vainqueur", "detail": "Bat Patrick Franziska 4-2 en finale" },
+        { "tournament": "WTT Champions Montpellier", "date": "Oct. 2026", "stage": "1/16 finale", "detail": "0-3 vs Simon Gauzy" }
+      ]
+    },
+    {
+      "name": "Wang Chuqin",
       "country": "CHN",
       "club": "Équipe de Chine",
       "world_rank": "#1",
-      "win_rate": "86%",
-      "record": "48V - 8D",
-      "titles": "5",
+      "win_rate": "88%",
+      "record": "Saison 2026",
+      "titles": "3",
       "photo_url": "",
       "history": [
-        { "tournament": "WTT Champions Frankfurt", "date": "Nov. 2026", "stage": "Vainqueur", "detail": "Allemagne" },
-        { "tournament": "WTT China Smash", "date": "Oct. 2026", "stage": "Vainqueur", "detail": "Pékin, Chine" },
-        { "tournament": "WTT Champions Macao", "date": "Sept. 2026", "stage": "Vainqueur", "detail": "Macao" }
+        { "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Simple Messieurs · Singapour" }
       ]
     }
   ]
