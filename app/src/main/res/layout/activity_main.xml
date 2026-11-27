@@ -616,6 +616,35 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" />
+
+                    <!-- Pro A Messieurs Standings Card -->
+                    <LinearLayout
+                        android:id="@+id/clubs_standings_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_surface_card"
+                        android:elevation="2dp"
+                        android:orientation="vertical"
+                        android:padding="14dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:letterSpacing="0.1"
+                            android:text="CLASSEMENT PRO A MESSIEURS"
+                            android:textColor="#DB2777"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/clubs_standings_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 

@@ -326,5 +326,17 @@
         { "discipline": "SINGLE", "tournament": "Singapore Smash", "date": "Fév. 2026", "stage": "Vainqueur", "detail": "Simple Messieurs · Singapour" }
       ]
     }
+  ],
+  "standings": [
+    { "rank": 1, "club": "Alliance Nîmes/Montpellier", "played": 7, "wins": 6, "points": 20 },
+    { "rank": 2, "club": "SPO Rouen", "played": 7, "wins": 5, "points": 18 },
+    { "rank": 3, "club": "GV Hennebont", "played": 7, "wins": 5, "points": 17 },
+    { "rank": 4, "club": "CTT Bruille", "played": 7, "wins": 4, "points": 16 },
+    { "rank": 5, "club": "Les Loups d'Angers", "played": 7, "wins": 4, "points": 15 },
+    { "rank": 6, "club": "C'Chartres TT", "played": 7, "wins": 3, "points": 14 },
+    { "rank": 7, "club": "Thorigné-Fouillard TT", "played": 7, "wins": 3, "points": 13 },
+    { "rank": 8, "club": "Roanne LNTT", "played": 7, "wins": 2, "points": 11 },
+    { "rank": 9, "club": "La Romagne SS", "played": 7, "wins": 2, "points": 10 },
+    { "rank": 10, "club": "Saint-Denis TT 93", "played": 7, "wins": 1, "points": 9 }
   ]
 }

@@ -114,11 +114,13 @@ class PingPongWidgetProvider : AppWidgetProvider() {
 
             // Matches from cache
             val trackedClubs = store.getTrackedClubs()
+            val trackedPlayers = store.getTrackedPlayers()
             val cachedFeed = store.getCachedFeed()
             val selectedMatches = cachedFeed?.let {
                 MatchFormatter.selectWidgetMatches(
                     matches = it.matches,
                     trackedClubs = trackedClubs,
+                    trackedPlayers = trackedPlayers,
                     maxCount = CARD_SLOTS.size,
                 )
             }.orEmpty()
@@ -193,9 +195,15 @@ class PingPongWidgetProvider : AppWidgetProvider() {
                 views.setTextViewText(slot.metaId, meta)
             }
 
-            // Clicking the card opens match.url directly in browser / YouTube
-            val targetIntent = if (match.url.isNotBlank()) {
-                Intent(Intent.ACTION_VIEW, Uri.parse(match.url)).apply {
+            // Prefer L'Équipe direct link when YouTube is geo-blocked in France
+            val preferredUrl = when {
+                match.vpnRequired && match.lequipeUrl.isNotBlank() -> match.lequipeUrl
+                match.url.isNotBlank() -> match.url
+                match.lequipeUrl.isNotBlank() -> match.lequipeUrl
+                else -> ""
+            }
+            val targetIntent = if (preferredUrl.isNotBlank()) {
+                Intent(Intent.ACTION_VIEW, Uri.parse(preferredUrl)).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             } else {

@@ -14,10 +14,15 @@ object MatchFormatter {
     fun selectWidgetMatches(
         matches: List<MatchItem>,
         trackedClubs: List<String> = MatchStore.DEFAULT_CLUBS,
+        trackedPlayers: List<String> = MatchStore.DEFAULT_PLAYERS,
         maxCount: Int = 3,
     ): List<MatchItem> {
         val relevant = matches.filter { match ->
-            !match.isClub || trackedClubs.any { club -> match.matchesClub(club) }
+            if (match.isClub) {
+                trackedClubs.any { club -> match.matchesClub(club) }
+            } else {
+                trackedPlayers.isEmpty() || trackedPlayers.any { p -> match.matchesPlayer(p) }
+            }
         }.ifEmpty { matches }
 
         val live = relevant

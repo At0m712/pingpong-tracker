@@ -64,6 +64,7 @@ object NotificationHelper {
         ensureChannel(context)
 
         val trackedClubs = store.getTrackedClubs()
+        val trackedPlayers = store.getTrackedPlayers()
         val allow30m = store.isNotif30mEnabled()
         val allowLive = store.isNotifLiveEnabled()
         val allowClubs = store.isNotifClubsEnabled()
@@ -75,8 +76,9 @@ object NotificationHelper {
             if (match.isClub) {
                 if (!allowClubs) continue
                 if (trackedClubs.none { club -> match.matchesClub(club) }) continue
-            } else if (!allowIntl) {
-                continue
+            } else {
+                if (!allowIntl) continue
+                if (trackedPlayers.isNotEmpty() && trackedPlayers.none { p -> match.matchesPlayer(p) }) continue
             }
 
             val startInstant = match.startInstant()

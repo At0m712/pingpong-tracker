@@ -443,15 +443,20 @@ def fetch_wtt_via_playwright(now_paris: datetime) -> list[dict]:
 # Manual overrides & merge
 # ---------------------------------------------------------------------------
 
-def load_manual_overrides(path: Path) -> tuple[list[dict], list[dict], list[dict]]:
+def load_manual_overrides(path: Path) -> tuple[list[dict], list[dict], list[dict], list[dict]]:
     if not path.exists():
-        return [], [], []
+        return [], [], [], []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-        return list(data.get("matches", [])), list(data.get("tournaments", [])), list(data.get("players", []))
+        return (
+            list(data.get("matches", [])),
+            list(data.get("tournaments", [])),
+            list(data.get("players", [])),
+            list(data.get("standings", [])),
+        )
     except (OSError, json.JSONDecodeError) as exc:
         print(f"[warn] Could not read {path}: {exc}", file=sys.stderr)
-        return [], [], []
+        return [], [], [], []
 
 
 def merge_by_id(primary: list[dict], secondary: list[dict]) -> list[dict]:
@@ -515,8 +520,8 @@ def main() -> int:
     # 2. Auto-scraped WTT live scores & schedules via Playwright
     wtt_matches = fetch_wtt_via_playwright(now_paris)
 
-    # 3. Base calendar, tournament brackets & player profiles
-    manual_matches, manual_tournaments, manual_players = load_manual_overrides(Path(args.manual))
+    # 3. Base calendar, tournament brackets, player profiles & Pro A standings
+    manual_matches, manual_tournaments, manual_players, manual_standings = load_manual_overrides(Path(args.manual))
 
     scraped = yt_fftt + yt_wtt + wtt_matches
     all_matches = prune_old_finished(merge_by_id(scraped, manual_matches), now_paris)
@@ -539,6 +544,7 @@ def main() -> int:
         "matches": all_matches,
         "tournaments": manual_tournaments,
         "players": manual_players,
+        "standings": manual_standings,
     }
 
     out_path = Path(args.out)

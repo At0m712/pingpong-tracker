@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.CalendarContract
 import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.pingpong.tracker.data.BracketMatch
+import com.pingpong.tracker.data.ClubStanding
 import com.pingpong.tracker.data.MatchFormatter
 import com.pingpong.tracker.data.MatchItem
 import com.pingpong.tracker.data.MatchStore
@@ -123,6 +125,8 @@ class MainActivity : Activity() {
     private lateinit var clubsSectionTitle: TextView
     private lateinit var clubsEmptyText: TextView
     private lateinit var clubsMatchesContainer: LinearLayout
+    private lateinit var clubsStandingsCard: View
+    private lateinit var clubsStandingsContainer: LinearLayout
 
     // Players tab
     private lateinit var btnAddPlayer: View
@@ -158,6 +162,7 @@ class MainActivity : Activity() {
     private var selectedDiscipline: PlayerDiscipline = PlayerDiscipline.ALL
     private var selectedTournamentId: String? = null
     private var heroMatch: MatchItem? = null
+    private var pendingManualSyncToast = false
 
     private val clockHandler = Handler(Looper.getMainLooper())
     private val clockTicker = object : Runnable {
@@ -273,6 +278,8 @@ class MainActivity : Activity() {
         clubsSectionTitle = findViewById(R.id.clubs_section_title)
         clubsEmptyText = findViewById(R.id.clubs_empty_text)
         clubsMatchesContainer = findViewById(R.id.clubs_matches_container)
+        clubsStandingsCard = findViewById(R.id.clubs_standings_card)
+        clubsStandingsContainer = findViewById(R.id.clubs_standings_container)
 
         btnAddPlayer = findViewById(R.id.btn_add_player)
         playersChipsContainer = findViewById(R.id.players_chips_container)
@@ -357,9 +364,25 @@ class MainActivity : Activity() {
         val feed = store.getCachedFeed()
         val allMatches = feed?.let { MatchFormatter.sortMatchesForList(it.matches) }.orEmpty()
         val trackedClubs = store.getTrackedClubs()
+        val trackedPlayers = store.getTrackedPlayers()
 
         val visibleMatches = allMatches.filter { match ->
-            !match.isClub || trackedClubs.any { club -> match.matchesClub(club) }
+            if (match.isClub) {
+                trackedClubs.any { club -> match.matchesClub(club) }
+            } else {
+                trackedPlayers.isEmpty() || trackedPlayers.any { p -> match.matchesPlayer(p) }
+            }
+        }
+
+        if (pendingManualSyncToast && !store.isSyncing()) {
+            pendingManualSyncToast = false
+            val err = store.getLastError()
+            val msg = if (err.isNullOrBlank()) {
+                "À jour · ${visibleMatches.size} matchs suivis"
+            } else {
+                err
+            }
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
 
         headerSyncStatus.text = if (store.isSyncing()) {
@@ -381,7 +404,7 @@ class MainActivity : Activity() {
         }
 
         renderMatchesTab(visibleMatches, trackedClubs)
-        renderClubsTab(allMatches, trackedClubs)
+        renderClubsTab(allMatches, trackedClubs, feed?.standings.orEmpty())
         renderPlayersTab(feed?.players.orEmpty(), allMatches, feed?.tournaments.orEmpty())
         renderBracketTab(feed?.tournaments.orEmpty(), allMatches, trackedClubs)
     }
@@ -551,7 +574,11 @@ class MainActivity : Activity() {
     // endregion
 
     // region TAB 2: CLUBS
-    private fun renderClubsTab(allMatches: List<MatchItem>, trackedClubs: List<String>) {
+    private fun renderClubsTab(
+        allMatches: List<MatchItem>,
+        trackedClubs: List<String>,
+        standings: List<ClubStanding>,
+    ) {
         if (selectedClub != null && trackedClubs.none { it.equals(selectedClub, ignoreCase = true) }) {
             selectedClub = null
         }
@@ -564,7 +591,7 @@ class MainActivity : Activity() {
                 removable = false,
                 onClick = {
                     selectedClub = null
-                    renderClubsTab(allMatches, trackedClubs)
+                    renderClubsTab(allMatches, trackedClubs, standings)
                 },
             )
         )
@@ -579,7 +606,7 @@ class MainActivity : Activity() {
                     removable = canRemove,
                     onClick = {
                         selectedClub = club
-                        renderClubsTab(allMatches, trackedClubs)
+                        renderClubsTab(allMatches, trackedClubs, standings)
                     },
                     onRemove = { confirmRemoveClub(club) },
                 )
@@ -591,7 +618,6 @@ class MainActivity : Activity() {
             targetClubs.any { club -> match.matchesClub(club) }
         }
 
-        // Update Club Hub Banner
         val activeClubName = selectedClub ?: trackedClubs.firstOrNull() ?: "CTT Bruille"
         bindCrest(clubHubCrest, activeClubName, trackedClubs)
         clubHubTitle.text = if (selectedClub != null) activeClubName else "Mes clubs Pro A"
@@ -608,16 +634,112 @@ class MainActivity : Activity() {
         clubsMatchesContainer.removeAllViews()
         if (clubMatches.isEmpty()) {
             clubsEmptyText.visibility = View.VISIBLE
-            return
+        } else {
+            clubsEmptyText.visibility = View.GONE
+            val inflater = LayoutInflater.from(this)
+            for (match in clubMatches) {
+                val card = inflater.inflate(R.layout.item_match, clubsMatchesContainer, false)
+                bindMatchCard(card, match, trackedClubs)
+                clubsMatchesContainer.addView(card)
+            }
         }
 
-        clubsEmptyText.visibility = View.GONE
-        val inflater = LayoutInflater.from(this)
-        for (match in clubMatches) {
-            val card = inflater.inflate(R.layout.item_match, clubsMatchesContainer, false)
-            bindMatchCard(card, match, trackedClubs)
-            clubsMatchesContainer.addView(card)
+        renderStandingsTable(standings, trackedClubs)
+    }
+
+    private fun renderStandingsTable(standings: List<ClubStanding>, trackedClubs: List<String>) {
+        clubsStandingsContainer.removeAllViews()
+        if (standings.isEmpty()) {
+            clubsStandingsCard.visibility = View.GONE
+            return
         }
+        clubsStandingsCard.visibility = View.VISIBLE
+
+        // Column header
+        clubsStandingsContainer.addView(
+            createStandingRow("#", "CLUB", "J", "PTS", isHeader = true, isHighlighted = false)
+        )
+        for (st in standings) {
+            val isTracked = trackedClubs.any { c ->
+                st.club.contains(c, ignoreCase = true) || c.contains(st.club, ignoreCase = true)
+            }
+            clubsStandingsContainer.addView(
+                createStandingRow(
+                    rank = "${st.rank}",
+                    club = st.club,
+                    played = "${st.played}",
+                    points = "${st.points}",
+                    isHeader = false,
+                    isHighlighted = isTracked,
+                )
+            )
+        }
+    }
+
+    private fun createStandingRow(
+        rank: String,
+        club: String,
+        played: String,
+        points: String,
+        isHeader: Boolean,
+        isHighlighted: Boolean,
+    ): View {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(8), dp(if (isHeader) 4 else 7), dp(8), dp(if (isHeader) 6 else 7))
+            if (isHighlighted) {
+                setBackgroundResource(R.drawable.bg_crest_bruille)
+            }
+        }
+        val textColor = when {
+            isHeader -> 0xFF8A6B7B.toInt()
+            isHighlighted -> 0xFF047857.toInt()
+            else -> 0xFF1E1118.toInt()
+        }
+        val textSizeSp = if (isHeader) 10f else 12.5f
+        val style = if (isHeader || isHighlighted) Typeface.BOLD else Typeface.NORMAL
+
+        row.addView(
+            TextView(this).apply {
+                text = rank
+                setTextColor(textColor)
+                textSize = textSizeSp
+                setTypeface(Typeface.MONOSPACE, style)
+                layoutParams = LinearLayout.LayoutParams(dp(26), LinearLayout.LayoutParams.WRAP_CONTENT)
+            }
+        )
+        row.addView(
+            TextView(this).apply {
+                text = club
+                setTextColor(textColor)
+                textSize = textSizeSp
+                setTypeface(null, style)
+                maxLines = 1
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+        )
+        row.addView(
+            TextView(this).apply {
+                text = played
+                setTextColor(if (isHeader) textColor else 0xFF7A5C6B.toInt())
+                textSize = textSizeSp
+                gravity = Gravity.END
+                setTypeface(Typeface.MONOSPACE, if (isHeader) Typeface.BOLD else Typeface.NORMAL)
+                layoutParams = LinearLayout.LayoutParams(dp(30), LinearLayout.LayoutParams.WRAP_CONTENT)
+            }
+        )
+        row.addView(
+            TextView(this).apply {
+                text = points
+                setTextColor(if (isHighlighted) 0xFF047857.toInt() else if (isHeader) textColor else 0xFFDB2777.toInt())
+                textSize = textSizeSp
+                gravity = Gravity.END
+                setTypeface(Typeface.MONOSPACE, Typeface.BOLD)
+                layoutParams = LinearLayout.LayoutParams(dp(36), LinearLayout.LayoutParams.WRAP_CONTENT)
+            }
+        )
+        return row
     }
 
     private fun showAddClubDialog() {
@@ -725,6 +847,7 @@ class MainActivity : Activity() {
                     removable = canRemove,
                     onClick = {
                         selectedPlayer = player
+                        selectedDiscipline = PlayerDiscipline.ALL
                         renderPlayersTab(feedPlayers, allMatches, tournaments)
                     },
                     onRemove = { confirmRemovePlayer(player) },
@@ -1144,6 +1267,8 @@ class MainActivity : Activity() {
         val scoreAwayView = card.findViewById<TextView>(R.id.item_score_away)
         val metaView = card.findViewById<TextView>(R.id.item_meta)
         val vpnBadge = card.findViewById<TextView>(R.id.item_vpn_badge)
+        val calendarBtn = card.findViewById<TextView>(R.id.item_calendar_btn)
+        val shareBtn = card.findViewById<TextView>(R.id.item_share_btn)
         val lequipeBtn = card.findViewById<TextView>(R.id.item_lequipe_btn)
 
         val badgeType = MatchFormatter.badgeType(match, trackedClubs)
@@ -1198,6 +1323,15 @@ class MainActivity : Activity() {
         } else {
             vpnBadge.visibility = View.GONE
         }
+
+        if (!match.isFinished && match.startInstant() != null) {
+            calendarBtn.visibility = View.VISIBLE
+            calendarBtn.setOnClickListener { addMatchToCalendar(match) }
+        } else {
+            calendarBtn.visibility = View.GONE
+        }
+
+        shareBtn.setOnClickListener { shareMatch(match) }
 
         val lequipeLink = resolveLequipeUrl(match)
         if (lequipeLink.isNotEmpty()) {
@@ -1400,10 +1534,54 @@ class MainActivity : Activity() {
 
     private fun triggerManualSync() {
         btnHeaderRefresh.animate().rotationBy(360f).setDuration(600L).start()
+        pendingManualSyncToast = true
         store.setSyncing(true)
         PingPongWidgetProvider.updateAllWidgets(this)
         WidgetUpdateWorker.enqueueImmediateSync(this, isManual = true)
         renderAll()
+    }
+
+    private fun addMatchToCalendar(match: MatchItem) {
+        val startMs = match.startInstant()?.toEpochMilli() ?: return
+        val endMs = startMs + 90L * 60L * 1000L // 1h30 default match duration
+        val descParts = ArrayList<String>()
+        if (match.broadcast.isNotBlank()) descParts.add("Diffusion : ${match.broadcast}")
+        if (match.lequipeUrl.isNotBlank()) descParts.add("L'Équipe : ${match.lequipeUrl}")
+        if (match.url.isNotBlank()) descParts.add("Live : ${match.url}")
+        if (match.vpnRequired) descParts.add("Note : ${match.vpnNote.ifBlank { "VPN conseillé" }}")
+
+        val intent = Intent(Intent.ACTION_INSERT).apply {
+            data = CalendarContract.Events.CONTENT_URI
+            putExtra(CalendarContract.Events.TITLE, "${match.home} vs ${match.away} (${match.competition})")
+            putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMs)
+            putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMs)
+            putExtra(CalendarContract.Events.DESCRIPTION, descParts.joinToString("\n"))
+        }
+        try {
+            startActivity(intent)
+        } catch (_: Exception) {
+            Toast.makeText(this, "Aucune application d'agenda trouvée.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun shareMatch(match: MatchItem) {
+        val countdown = MatchFormatter.formatCountdown(match)
+        val link = match.lequipeUrl.ifBlank { match.url }
+        val text = buildString {
+            append("${match.competition}\n")
+            append("${MatchFormatter.formatMatchTitle(match)} ($countdown)")
+            if (match.broadcast.isNotBlank()) append("\nDiffusion : ${match.broadcast}")
+            if (link.isNotBlank()) append("\n$link")
+        }
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
+        try {
+            startActivity(Intent.createChooser(intent, "Partager le match"))
+        } catch (_: Exception) {
+            Toast.makeText(this, "Impossible de partager.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun resolveLequipeUrl(match: MatchItem): String {

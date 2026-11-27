@@ -182,6 +182,36 @@
                 android:textSize="10.5sp" />
 
             <TextView
+                android:id="@+id/item_calendar_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_score_box"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="+ Agenda"
+                android:textColor="#9D174D"
+                android:textSize="8.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_share_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/bg_score_box"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="Partager"
+                android:textColor="#7A5C6B"
+                android:textSize="8.5sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/item_lequipe_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -40,6 +40,7 @@ object MatchFeedParser {
 
         val tournaments = parseTournaments(root.optJSONArray("tournaments"))
         val players = parsePlayers(root.optJSONArray("players"))
+        val standings = parseStandings(root.optJSONArray("standings"))
 
         return MatchFeed(
             updatedAt = updatedAt,
@@ -49,7 +50,28 @@ object MatchFeedParser {
             matches = matches,
             tournaments = tournaments,
             players = players,
+            standings = standings,
         )
+    }
+
+    private fun parseStandings(array: JSONArray?): List<ClubStanding> {
+        if (array == null) return emptyList()
+        val list = ArrayList<ClubStanding>(array.length())
+        for (i in 0 until array.length()) {
+            val obj = array.optJSONObject(i) ?: continue
+            val club = obj.optString("club", "").trim()
+            if (club.isEmpty()) continue
+            list.add(
+                ClubStanding(
+                    rank = obj.optInt("rank", i + 1),
+                    club = club,
+                    played = obj.optInt("played", 0),
+                    wins = obj.optInt("wins", 0),
+                    points = obj.optInt("points", 0),
+                )
+            )
+        }
+        return list
     }
 
     private fun parsePlayers(array: JSONArray?): List<PlayerProfile> {

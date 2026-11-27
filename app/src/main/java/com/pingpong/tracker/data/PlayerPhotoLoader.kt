@@ -24,7 +24,8 @@ import kotlin.math.min
 
 /**
  * Zero-dependency async circular portrait loader for table tennis players.
- * Checks memory cache -> disk cache -> explicit photoUrl -> Wikipedia FR/EN REST thumbnail API.
+ * Checks memory cache -> disk cache -> explicit photoUrl -> Wikipedia FR/EN REST summary
+ * -> Wikipedia Search fallback (accent-tolerant).
  */
 object PlayerPhotoLoader {
 
@@ -50,7 +51,6 @@ object PlayerPhotoLoader {
             return
         }
 
-        // Show monogram while loading
         imageView.visibility = View.GONE
         fallbackView.visibility = View.VISIBLE
 
@@ -101,6 +101,8 @@ object PlayerPhotoLoader {
         val imageUrl = explicitUrl.trim().ifEmpty {
             resolveWikipediaThumbnail(playerName, "fr")
                 ?: resolveWikipediaThumbnail(playerName, "en")
+                ?: searchWikipediaThumbnail(playerName, "fr", "tennis de table")
+                ?: searchWikipediaThumbnail(playerName, "en", "table tennis")
                 ?: ""
         }
         if (imageUrl.isEmpty()) return null
@@ -119,9 +121,9 @@ object PlayerPhotoLoader {
         return circular
     }
 
-    private fun resolveWikipediaThumbnail(playerName: String, lang: String): String? {
+    private fun resolveWikipediaThumbnail(pageTitle: String, lang: String): String? {
         return try {
-            val encoded = URLEncoder.encode(playerName.trim().replace(' ', '_'), "UTF-8")
+            val encoded = URLEncoder.encode(pageTitle.trim().replace(' ', '_'), "UTF-8")
             val url = URL("https://$lang.wikipedia.org/api/rest_v1/page/summary/$encoded")
             val conn = (url.openConnection() as HttpURLConnection).apply {
                 connectTimeout = 6_000
@@ -137,6 +139,29 @@ object PlayerPhotoLoader {
             } finally {
                 conn.disconnect()
             }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun searchWikipediaThumbnail(playerName: String, lang: String, sportHint: String): String? {
+        return try {
+            val q = URLEncoder.encode("$playerName $sportHint", "UTF-8")
+            val url = URL("https://$lang.wikipedia.org/w/api.php?action=query&list=search&srsearch=$q&srlimit=1&format=json")
+            val conn = (url.openConnection() as HttpURLConnection).apply {
+                connectTimeout = 6_000
+                readTimeout = 6_000
+                setRequestProperty("User-Agent", "PingPongTracker-Android/1.0")
+            }
+            val title = try {
+                if (conn.responseCode !in 200..299) return null
+                val body = conn.inputStream.bufferedReader(StandardCharsets.UTF_8).readText()
+                val arr = JSONObject(body).optJSONObject("query")?.optJSONArray("search")
+                if (arr != null && arr.length() > 0) arr.optJSONObject(0)?.optString("title", "") else null
+            } finally {
+                conn.disconnect()
+            }
+            if (title.isNullOrBlank()) null else resolveWikipediaThumbnail(title, lang)
         } catch (_: Exception) {
             null
         }
@@ -162,7 +187,6 @@ object PlayerPhotoLoader {
     }
 
     private fun toCircularPortrait(src: Bitmap, targetSize: Int): Bitmap {
-        // Focus slightly toward the top (face framing) when image is taller than wide
         val side = min(src.width, src.height)
         val x = (src.width - side) / 2
         val y = ((src.height - side) * 0.2f).toInt().coerceAtLeast(0)
@@ -178,7 +202,6 @@ object PlayerPhotoLoader {
         val radius = targetSize / 2f
         canvas.drawCircle(radius, radius, radius, paint)
 
-        // Subtle rose-quartz ring border
         val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
             strokeWidth = 4f

@@ -1,5 +1,6 @@
 package com.pingpong.tracker.data
 
+import java.text.Normalizer
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -13,6 +14,7 @@ data class MatchFeed(
     val matches: List<MatchItem>,
     val tournaments: List<TournamentBracket> = emptyList(),
     val players: List<PlayerProfile> = emptyList(),
+    val standings: List<ClubStanding> = emptyList(),
 )
 
 data class MatchItem(
@@ -68,14 +70,37 @@ data class MatchItem(
     }
 
     fun matchesClub(clubName: String): Boolean {
-        val needle = clubName.trim()
+        val needle = normalizeText(clubName)
         if (needle.isEmpty()) return false
-        return home.contains(needle, ignoreCase = true) ||
-            away.contains(needle, ignoreCase = true) ||
-            followed.any { it.contains(needle, ignoreCase = true) }
+        return normalizeText(home).contains(needle) ||
+            normalizeText(away).contains(needle) ||
+            followed.any { normalizeText(it).contains(needle) }
+    }
+
+    fun matchesPlayer(playerName: String): Boolean {
+        val needle = normalizeText(playerName)
+        if (needle.isEmpty()) return false
+        val haystack = normalizeText("$home $away ${followed.joinToString(" ")}")
+        if (haystack.contains(needle)) return true
+        // Also match by last name if not ambiguous ("lebrun" needs first name)
+        val parts = needle.split(" ").filter { it.length >= 3 }
+        if (parts.size >= 2) {
+            val last = parts.last()
+            val first = parts.first()
+            return if (last == "lebrun") {
+                haystack.contains(first) && haystack.contains("lebrun")
+            } else {
+                haystack.contains(last)
+            }
+        }
+        return false
     }
 
     companion object {
+        private fun normalizeText(s: String): String {
+            return Normalizer.normalize(s.trim().lowercase(), Normalizer.Form.NFD)
+                .replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
+        }
         const val STATUS_LIVE = "live"
         const val STATUS_SCHEDULED = "scheduled"
         const val STATUS_FINISHED = "finished"
@@ -144,4 +169,13 @@ data class PlayerTournamentResult(
     val detail: String = "",
     val discipline: String = "SINGLE", // SINGLE, DOUBLE, MIXED
 )
+
+data class ClubStanding(
+    val rank: Int,
+    val club: String,
+    val played: Int,
+    val wins: Int,
+    val points: Int,
+)
+
 
