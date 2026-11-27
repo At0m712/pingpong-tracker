@@ -18,6 +18,7 @@ import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -27,6 +28,7 @@ import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.pingpong.tracker.data.BracketMatch
 import com.pingpong.tracker.data.MatchFormatter
@@ -34,6 +36,7 @@ import com.pingpong.tracker.data.MatchItem
 import com.pingpong.tracker.data.MatchStore
 import com.pingpong.tracker.data.TournamentBracket
 import com.pingpong.tracker.notifications.NotificationHelper
+import com.pingpong.tracker.ui.PinkDustBackgroundView
 import com.pingpong.tracker.widget.PingPongWidgetProvider
 import com.pingpong.tracker.worker.WidgetUpdateWorker
 import java.util.Locale
@@ -49,6 +52,7 @@ class MainActivity : Activity() {
     }
 
     private lateinit var store: MatchStore
+    private lateinit var pinkDustBg: PinkDustBackgroundView
 
     // Header
     private lateinit var headerSyncStatus: TextView
@@ -138,6 +142,13 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+        controller.isAppearanceLightStatusBars = true
+        controller.isAppearanceLightNavigationBars = true
+
+        pinkDustBg = findViewById(R.id.pink_dust_bg)
+
         val rootLayout = findViewById<View>(R.id.root_layout)
         ViewCompat.setOnApplyWindowInsetsListener(rootLayout) { v, insets ->
             val bars = insets.getInsets(
@@ -160,6 +171,7 @@ class MainActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
+        pinkDustBg.startAnimation()
         store.prefs.registerOnSharedPreferenceChangeListener(prefsListener)
         renderAll()
         clockHandler.removeCallbacks(clockTicker)
@@ -167,6 +179,7 @@ class MainActivity : Activity() {
     }
 
     override fun onStop() {
+        pinkDustBg.stopAnimation()
         clockHandler.removeCallbacks(clockTicker)
         store.prefs.unregisterOnSharedPreferenceChangeListener(prefsListener)
         super.onStop()
@@ -249,6 +262,20 @@ class MainActivity : Activity() {
         tabClubsView.visibility = if (tab == Tab.CLUBS) View.VISIBLE else View.GONE
         tabBracketView.visibility = if (tab == Tab.BRACKET) View.VISIBLE else View.GONE
 
+        val activeView = when (tab) {
+            Tab.MATCHES -> tabMatchesView
+            Tab.CLUBS -> tabClubsView
+            Tab.BRACKET -> tabBracketView
+        }
+        activeView.alpha = 0f
+        activeView.translationY = dp(12).toFloat()
+        activeView.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(220L)
+            .setInterpolator(DecelerateInterpolator())
+            .start()
+
         updateNavItem(navMatchesIndicator, navMatchesIcon, navMatchesLabel, tab == Tab.MATCHES)
         updateNavItem(navClubsIndicator, navClubsIcon, navClubsLabel, tab == Tab.CLUBS)
         updateNavItem(navBracketIndicator, navBracketIcon, navBracketLabel, tab == Tab.BRACKET)
@@ -256,7 +283,7 @@ class MainActivity : Activity() {
 
     private fun updateNavItem(indicator: View, icon: ImageView, label: TextView, active: Boolean) {
         indicator.visibility = if (active) View.VISIBLE else View.INVISIBLE
-        val color = if (active) 0xFFE9D28A.toInt() else 0xFF71717A.toInt()
+        val color = if (active) 0xFFDB2777.toInt() else 0xFFA08493.toInt()
         icon.setColorFilter(color)
         label.setTextColor(color)
         label.setTypeface(null, if (active) Typeface.BOLD else Typeface.NORMAL)
@@ -505,13 +532,13 @@ class MainActivity : Activity() {
             }
             val label = TextView(this).apply {
                 text = club
-                setTextColor(if (alreadyAdded) 0xFF71717A.toInt() else 0xFFFAFAFA.toInt())
+                setTextColor(if (alreadyAdded) 0xFFA08493.toInt() else 0xFF1E1118.toInt())
                 textSize = 13f
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
             val badge = TextView(this).apply {
                 text = if (alreadyAdded) "Suivi" else "+ Suivre"
-                setTextColor(if (alreadyAdded) 0xFF22C55E.toInt() else 0xFFE11D48.toInt())
+                setTextColor(if (alreadyAdded) 0xFF059669.toInt() else 0xFFDB2777.toInt())
                 textSize = 12f
                 setTypeface(null, Typeface.BOLD)
             }
@@ -638,7 +665,7 @@ class MainActivity : Activity() {
 
             val header = TextView(this).apply {
                 text = round.name.uppercase(Locale.FRANCE)
-                setTextColor(0xFF71717A.toInt())
+                setTextColor(0xFFDB2777.toInt())
                 textSize = 10f
                 letterSpacing = 0.08f
                 setTypeface(null, Typeface.BOLD)
@@ -664,7 +691,7 @@ class MainActivity : Activity() {
 
                 if (roundIndex < tournament.rounds.lastIndex) {
                     val connector = View(this).apply {
-                        setBackgroundColor(0xFF27272A.toInt())
+                        setBackgroundColor(0x55F472B6.toInt())
                         layoutParams = LinearLayout.LayoutParams(dp(12), dp(1))
                     }
                     slot.addView(connector)
@@ -709,19 +736,19 @@ class MainActivity : Activity() {
         player2.setTypeface(null, if (p2Bold) Typeface.BOLD else Typeface.NORMAL)
 
         val p1Color = when {
-            bm.winner == 2 -> 0xFF71717A.toInt()
-            bm.highlight1 -> 0xFFFAFAFA.toInt()
-            else -> 0xFFE4E4E7.toInt()
+            bm.winner == 2 -> 0xFFA08493.toInt()
+            bm.highlight1 -> 0xFFDB2777.toInt()
+            else -> 0xFF1E1118.toInt()
         }
         val p2Color = when {
-            bm.winner == 1 -> 0xFF71717A.toInt()
-            bm.highlight2 -> 0xFFFAFAFA.toInt()
-            else -> 0xFFE4E4E7.toInt()
+            bm.winner == 1 -> 0xFFA08493.toInt()
+            bm.highlight2 -> 0xFFDB2777.toInt()
+            else -> 0xFF4A303E.toInt()
         }
         player1.setTextColor(p1Color)
-        score1.setTextColor(if (bm.winner == 1) 0xFF22C55E.toInt() else p1Color)
+        score1.setTextColor(if (bm.winner == 1) 0xFF059669.toInt() else p1Color)
         player2.setTextColor(p2Color)
-        score2.setTextColor(if (bm.winner == 2) 0xFF22C55E.toInt() else p2Color)
+        score2.setTextColor(if (bm.winner == 2) 0xFF059669.toInt() else p2Color)
 
         card.setOnClickListener {
             if (bm.url.isNotBlank()) openUrl(bm.url)
@@ -751,11 +778,11 @@ class MainActivity : Activity() {
 
         if (match.isLive) {
             countdownView.setBackgroundResource(R.drawable.bg_live_pill)
-            countdownView.setTextColor(0xFFFB7185.toInt())
+            countdownView.setTextColor(0xFFBE123C.toInt())
         } else {
             countdownView.background = null
             countdownView.setTextColor(
-                if (match.isFinished) 0xFF71717A.toInt() else 0xFFE4E4E7.toInt(),
+                if (match.isFinished) 0xFFA08493.toInt() else 0xFFDB2777.toInt(),
             )
         }
 
@@ -804,18 +831,24 @@ class MainActivity : Activity() {
     private fun bindCrest(view: TextView, name: String, trackedClubs: List<String>) {
         view.text = monogramFor(name)
         val lowered = name.lowercase(Locale.FRANCE)
-        val bgRes = when {
+        when {
             lowered.contains("bruille") ||
-                trackedClubs.any { lowered.contains(it.lowercase(Locale.FRANCE)) } ->
-                R.drawable.bg_crest_bruille
+                trackedClubs.any { lowered.contains(it.lowercase(Locale.FRANCE)) } -> {
+                view.setBackgroundResource(R.drawable.bg_crest_bruille)
+                view.setTextColor(0xFF047857.toInt())
+            }
             lowered.contains("lebrun") ||
                 lowered.contains("coton") ||
                 lowered.contains("poret") ||
-                lowered.contains("gauzy") ->
-                R.drawable.bg_crest_france
-            else -> R.drawable.bg_crest_neutral
+                lowered.contains("gauzy") -> {
+                view.setBackgroundResource(R.drawable.bg_crest_france)
+                view.setTextColor(0xFFBE185D.toInt())
+            }
+            else -> {
+                view.setBackgroundResource(R.drawable.bg_crest_neutral)
+                view.setTextColor(0xFF9D174D.toInt())
+            }
         }
-        view.setBackgroundResource(bgRes)
     }
 
     private fun monogramFor(name: String): String {
@@ -860,7 +893,7 @@ class MainActivity : Activity() {
 
         val label = TextView(this).apply {
             this.text = text
-            setTextColor(if (active) 0xFF09090B.toInt() else 0xFFA1A1AA.toInt())
+            setTextColor(if (active) 0xFFFFFFFF.toInt() else 0xFF7A5C6B.toInt())
             textSize = 12f
             setTypeface(null, if (active) Typeface.BOLD else Typeface.NORMAL)
         }
@@ -869,7 +902,7 @@ class MainActivity : Activity() {
         if (removable && onRemove != null) {
             val closeIcon = ImageView(this).apply {
                 setImageResource(R.drawable.ic_close)
-                setColorFilter(if (active) 0xFF09090B.toInt() else 0xFF71717A.toInt())
+                setColorFilter(if (active) 0xFFFFFFFF.toInt() else 0xFFA08493.toInt())
                 setPadding(dp(6), dp(2), dp(2), dp(2))
                 layoutParams = LinearLayout.LayoutParams(dp(22), dp(18))
                 setOnClickListener { onRemove() }

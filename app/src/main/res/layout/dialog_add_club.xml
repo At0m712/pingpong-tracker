@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#131316"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     android:padding="20dp">
 
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:letterSpacing="0.06"
         android:text="AJOUTER UN CLUB"
-        android:textColor="#FAFAFA"
+        android:textColor="#1E1118"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Saisissez un nom de club ou choisissez parmi les clubs Pro A."
-        android:textColor="#A1A1AA"
+        android:textColor="#7A5C6B"
         android:textSize="12sp" />
 
     <EditText
@@ -34,8 +34,8 @@
         android:maxLines="1"
         android:paddingHorizontal="12dp"
         android:paddingVertical="10dp"
-        android:textColor="#FAFAFA"
-        android:textColorHint="#52525B"
+        android:textColor="#1E1118"
+        android:textColorHint="#B090A0"
         android:textSize="13sp" />
 
     <Button
@@ -57,7 +57,7 @@
         android:layout_marginBottom="8dp"
         android:letterSpacing="0.06"
         android:text="SUGGESTIONS PRO A"
-        android:textColor="#71717A"
+        android:textColor="#DB2777"
         android:textSize="10sp"
         android:textStyle="bold" />
 

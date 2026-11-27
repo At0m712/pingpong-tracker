@@ -8,20 +8,21 @@
     <path android:pathData="M0,0h108v108h-108z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:centerX="36"
-                android:centerY="32"
-                android:gradientRadius="92"
-                android:type="radial">
-                <item android:color="#241019" android:offset="0.0" />
-                <item android:color="#0C0C10" android:offset="0.62" />
-                <item android:color="#060608" android:offset="1.0" />
+                android:endX="108"
+                android:endY="108"
+                android:startX="0"
+                android:startY="0"
+                android:type="linear">
+                <item android:color="#FFFFFF" android:offset="0.0" />
+                <item android:color="#FFF5F9" android:offset="0.6" />
+                <item android:color="#FCE7F3" android:offset="1.0" />
             </gradient>
         </aapt:attr>
     </path>
-    <!-- Subtle diagonal court line -->
+    <!-- Flowing rose dust curve -->
     <path
         android:fillColor="#00000000"
-        android:pathData="M-8,86 L116,22"
-        android:strokeWidth="1.2"
-        android:strokeColor="#1AFFFFFF" />
+        android:pathData="M-8,76 Q34,42 64,62 T118,32"
+        android:strokeWidth="2.2"
+        android:strokeColor="#4DEC4899" />
 </vector>

@@ -180,7 +180,7 @@ class PingPongWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(slot.countdownId, countdown)
             views.setTextColor(
                 slot.countdownId,
-                if (match.isLive) 0xFFEF4444.toInt() else 0xFFE2E8F0.toInt(),
+                if (match.isLive) 0xFFE11D48.toInt() else 0xFFDB2777.toInt(),
             )
 
             views.setTextViewText(slot.titleId, MatchFormatter.formatMatchTitle(match))

@@ -6,24 +6,30 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
+    <!-- Luminous pink dust particles -->
+    <path android:fillColor="#99F472B6" android:pathData="M24,44 m-2.2,0 a2.2,2.2 0 1,1 4.4,0 a2.2,2.2 0 1,1 -4.4,0" />
+    <path android:fillColor="#66EC4899" android:pathData="M31,29 m-1.6,0 a1.6,1.6 0 1,1 3.2,0 a1.6,1.6 0 1,1 -3.2,0" />
+    <path android:fillColor="#88F472B6" android:pathData="M80,72 m-2.0,0 a2.0,2.0 0 1,1 4.0,0 a2.0,2.0 0 1,1 -4.0,0" />
+    <path android:fillColor="#55DB2777" android:pathData="M73,78 m-1.4,0 a1.4,1.4 0 1,1 2.8,0 a1.4,1.4 0 1,1 -2.8,0" />
+
     <!-- Speed arc behind ball -->
     <path
         android:fillColor="#00000000"
         android:pathData="M24,42 Q32,26 48,25"
         android:strokeWidth="2.4"
-        android:strokeColor="#66FAFAFA"
+        android:strokeColor="#80EC4899"
         android:strokeLineCap="round" />
 
-    <!-- Paddle handle -->
+    <!-- Paddle handle (deep rose-charcoal) -->
     <path
-        android:fillColor="#27272A"
+        android:fillColor="#3B1D2E"
         android:pathData="M48.5,58.5 L34.5,72.5 C32.8,74.2 32.8,77.0 34.5,78.7 L36.3,80.5 C38.0,82.2 40.8,82.2 42.5,80.5 L56.5,66.5 Z" />
-    <!-- Handle crimson stripe -->
+    <!-- Handle rose stripe -->
     <path
-        android:fillColor="#E11D48"
+        android:fillColor="#F472B6"
         android:pathData="M45.8,61.2 L37.2,69.8 L39.6,72.2 L48.2,63.6 Z" />
 
-    <!-- Paddle rubber head (crimson gradient) -->
+    <!-- Paddle rubber head (vibrant rose-pink gradient) -->
     <path android:pathData="M61,27 C72.6,27 82,36.4 82,48 C82,59.6 72.6,69 61,69 C49.4,69 40,59.6 40,48 C40,36.4 49.4,27 61,27 Z">
         <aapt:attr name="android:fillColor">
             <gradient
@@ -32,27 +38,25 @@
                 android:startX="42"
                 android:startY="28"
                 android:type="linear">
-                <item android:color="#FB3760" android:offset="0.0" />
-                <item android:color="#E11D48" android:offset="0.55" />
-                <item android:color="#9F1239" android:offset="1.0" />
+                <item android:color="#F472B6" android:offset="0.0" />
+                <item android:color="#EC4899" android:offset="0.52" />
+                <item android:color="#BE185D" android:offset="1.0" />
             </gradient>
         </aapt:attr>
     </path>
 
-    <!-- Subtle inner highlight on paddle -->
+    <!-- Soft specular highlight -->
     <path
         android:fillColor="#00000000"
         android:pathData="M47,42 C49,35 55,31 62,31"
-        android:strokeWidth="2"
-        android:strokeColor="#4DFFFFFF"
+        android:strokeWidth="2.2"
+        android:strokeColor="#66FFFFFF"
         android:strokeLineCap="round" />
 
-    <!-- Crisp white ping-pong ball -->
+    <!-- Pearl ping-pong ball with rose outline -->
     <path
-        android:fillColor="#FAFAFA"
-        android:pathData="M36,37 m-7.5,0 a7.5,7.5 0 1,1 15,0 a7.5,7.5 0 1,1 -15,0" />
-    <!-- Subtle shadow crescent on ball -->
-    <path
-        android:fillColor="#2609090B"
-        android:pathData="M41.5,33.5 A7.5,7.5 0 0,1 32.5,42.5 A7.5,7.5 0 0,0 41.5,33.5 Z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,37 m-7.5,0 a7.5,7.5 0 1,1 15,0 a7.5,7.5 0 1,1 -15,0"
+        android:strokeWidth="1.6"
+        android:strokeColor="#EC4899" />
 </vector>

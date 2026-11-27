@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="196dp"
+    android:layout_width="198dp"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_bracket_card"
     android:clickable="true"
+    android:elevation="2dp"
     android:focusable="true"
     android:orientation="vertical"
     android:paddingHorizontal="10dp"
-    android:paddingVertical="8dp">
+    android:paddingVertical="9dp">
 
     <!-- Optional Live & VPN indicators -->
     <LinearLayout
@@ -39,7 +40,7 @@
             android:paddingHorizontal="5dp"
             android:paddingVertical="1dp"
             android:text="VPN"
-            android:textColor="#FBBF24"
+            android:textColor="#B45309"
             android:textSize="8sp"
             android:textStyle="bold"
             android:visibility="gone" />
@@ -57,7 +58,7 @@
             android:layout_width="3dp"
             android:layout_height="14dp"
             android:layout_marginEnd="6dp"
-            android:background="#E11D48"
+            android:background="#EC4899"
             android:visibility="invisible" />
 
         <TextView
@@ -65,7 +66,7 @@
             android:layout_width="28dp"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textColor="#71717A"
+            android:textColor="#9D7A8C"
             android:textSize="10sp" />
 
         <TextView
@@ -75,7 +76,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#FAFAFA"
+            android:textColor="#1E1118"
             android:textSize="12sp" />
 
         <TextView
@@ -84,7 +85,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:gravity="end"
-            android:textColor="#FAFAFA"
+            android:textColor="#1E1118"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -93,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="5dp"
-        android:background="#222227" />
+        android:background="#26F472B6" />
 
     <!-- Player 2 -->
     <LinearLayout
@@ -107,7 +108,7 @@
             android:layout_width="3dp"
             android:layout_height="14dp"
             android:layout_marginEnd="6dp"
-            android:background="#E11D48"
+            android:background="#EC4899"
             android:visibility="invisible" />
 
         <TextView
@@ -115,7 +116,7 @@
             android:layout_width="28dp"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:textColor="#71717A"
+            android:textColor="#9D7A8C"
             android:textSize="10sp" />
 
         <TextView
@@ -125,7 +126,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#D4D4D8"
+            android:textColor="#4A303E"
             android:textSize="12sp" />
 
         <TextView
@@ -134,7 +135,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:gravity="end"
-            android:textColor="#D4D4D8"
+            android:textColor="#4A303E"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
