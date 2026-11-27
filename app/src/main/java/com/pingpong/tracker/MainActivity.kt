@@ -249,9 +249,8 @@ class MainActivity : Activity() {
         btnHeaderRefresh.setOnClickListener { triggerManualSync() }
         btnHeaderSettings.setOnClickListener { showSettingsDialog() }
 
-        findViewById<View>(R.id.quick_btn_sync).setOnClickListener { triggerManualSync() }
         findViewById<View>(R.id.quick_btn_widget).setOnClickListener { requestPinWidget() }
-        findViewById<View>(R.id.quick_btn_notifs).setOnClickListener { showSettingsDialog() }
+        findViewById<View>(R.id.quick_btn_notifs).setOnClickListener { showNotificationsDialog() }
         findViewById<View>(R.id.quick_btn_club).setOnClickListener { showAddClubDialog() }
 
         navMatches.setOnClickListener { selectTab(Tab.MATCHES) }
@@ -353,11 +352,17 @@ class MainActivity : Activity() {
             )
         }
 
-        val filtered = when (currentFilter) {
+        val filteredBase = when (currentFilter) {
             MatchFilter.ALL -> visibleMatches
             MatchFilter.LIVE -> visibleMatches.filter { it.isLive }
             MatchFilter.CLUB -> visibleMatches.filter { it.isClub }
             MatchFilter.INTL -> visibleMatches.filter { it.isInternational }
+        }
+        // Avoid duplicating the spotlight match right below the Hero card in ALL view
+        val filtered = if (currentFilter == MatchFilter.ALL && spotlight != null && filteredBase.size > 1) {
+            filteredBase.filterNot { it.id == spotlight.id }
+        } else {
+            filteredBase
         }
 
         matchesListContainer.removeAllViews()
@@ -891,6 +896,10 @@ class MainActivity : Activity() {
     }
 
     private fun monogramFor(name: String): String {
+        val lower = name.lowercase(Locale.FRANCE)
+        if (lower.contains("félix") && lower.contains("alexis")) return "LB"
+        if (lower.contains("top 16") || lower.contains("tirage")) return "WT"
+
         val cleaned = name.trim()
             .replace("CTT ", "", ignoreCase = true)
             .replace("SPO ", "", ignoreCase = true)
@@ -899,12 +908,12 @@ class MainActivity : Activity() {
             .replace("SS ", "", ignoreCase = true)
             .replace("Alliance ", "", ignoreCase = true)
             .replace("Les Loups d'", "", ignoreCase = true)
+            .replace(Regex("[^\\p{L}\\s]"), " ")
             .trim()
-        val words = cleaned.split(Regex("[\\s/\\-&]+")).filter { it.isNotBlank() }
+        val words = cleaned.split(Regex("\\s+")).filter { it.length >= 2 }
         return when {
             words.size >= 2 -> "${words[0][0]}${words[1][0]}".uppercase(Locale.FRANCE)
-            cleaned.length >= 2 -> cleaned.substring(0, 2).uppercase(Locale.FRANCE)
-            cleaned.isNotEmpty() -> cleaned.uppercase(Locale.FRANCE)
+            words.size == 1 && words[0].length >= 2 -> words[0].substring(0, 2).uppercase(Locale.FRANCE)
             else -> "TT"
         }
     }
@@ -953,20 +962,15 @@ class MainActivity : Activity() {
     }
     // endregion
 
-    // region SETTINGS DIALOG & SYSTEM ACTIONS
-    private fun showSettingsDialog() {
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
-        val statusText = view.findViewById<TextView>(R.id.settings_status)
+    // region NOTIFICATIONS & SETTINGS DIALOGS
+    private fun showNotificationsDialog() {
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_notifications, null)
         val switch30m = view.findViewById<Switch>(R.id.switch_notif_30m)
         val switchLive = view.findViewById<Switch>(R.id.switch_notif_live)
         val switchClubs = view.findViewById<Switch>(R.id.switch_notif_clubs)
         val switchIntl = view.findViewById<Switch>(R.id.switch_notif_intl)
         val switchVpn = view.findViewById<Switch>(R.id.switch_notif_vpn)
         val btnTestNotif = view.findViewById<Button>(R.id.settings_btn_test_notif)
-        val inputUrl = view.findViewById<EditText>(R.id.settings_input_url)
-        val btnSave = view.findViewById<Button>(R.id.settings_btn_save_url)
-        val btnPin = view.findViewById<Button>(R.id.settings_btn_pin_widget)
-        val btnBattery = view.findViewById<Button>(R.id.settings_btn_battery)
 
         switch30m.isChecked = store.isNotif30mEnabled()
         switchLive.isChecked = store.isNotifLiveEnabled()
@@ -979,15 +983,6 @@ class MainActivity : Activity() {
         switchClubs.setOnCheckedChangeListener { _, checked -> store.setNotifClubsEnabled(checked) }
         switchIntl.setOnCheckedChangeListener { _, checked -> store.setNotifIntlEnabled(checked) }
         switchVpn.setOnCheckedChangeListener { _, checked -> store.setNotifVpnHintEnabled(checked) }
-
-        inputUrl.setText(store.getFeedUrl())
-        val lastSync = MatchFormatter.formatSyncLabel(store.getLastSyncEpochMs())
-        val err = store.getLastError()
-        statusText.text = if (err.isNullOrBlank()) {
-            "Dernière synchro : $lastSync"
-        } else {
-            "Dernière synchro : $lastSync · $err"
-        }
 
         val dialog = AlertDialog.Builder(this)
             .setView(view)
@@ -1006,6 +1001,30 @@ class MainActivity : Activity() {
                 requestNotificationPermissionIfNeeded()
             }
         }
+
+        dialog.show()
+    }
+
+    private fun showSettingsDialog() {
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
+        val statusText = view.findViewById<TextView>(R.id.settings_status)
+        val inputUrl = view.findViewById<EditText>(R.id.settings_input_url)
+        val btnSave = view.findViewById<Button>(R.id.settings_btn_save_url)
+        val btnPin = view.findViewById<Button>(R.id.settings_btn_pin_widget)
+        val btnBattery = view.findViewById<Button>(R.id.settings_btn_battery)
+
+        inputUrl.setText(store.getFeedUrl())
+        val lastSync = MatchFormatter.formatSyncLabel(store.getLastSyncEpochMs())
+        val err = store.getLastError()
+        statusText.text = if (err.isNullOrBlank()) {
+            "Dernière synchro : $lastSync"
+        } else {
+            "Dernière synchro : $lastSync · $err"
+        }
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
 
         btnSave.setOnClickListener {
             val newUrl = inputUrl.text.toString().trim()
@@ -1036,6 +1055,7 @@ class MainActivity : Activity() {
     }
 
     private fun triggerManualSync() {
+        btnHeaderRefresh.animate().rotationBy(360f).setDuration(600L).start()
         store.setSyncing(true)
         PingPongWidgetProvider.updateAllWidgets(this)
         WidgetUpdateWorker.enqueueImmediateSync(this, isManual = true)

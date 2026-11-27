@@ -125,7 +125,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/quick_btn_sync"
+                    android:id="@+id/quick_btn_notifs"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:layout_marginEnd="8dp"
@@ -133,8 +133,8 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
-                    android:paddingHorizontal="13dp"
-                    android:text="↻ Synchro"
+                    android:paddingHorizontal="14dp"
+                    android:text="Alertes"
                     android:textColor="#9D174D"
                     android:textSize="11.5sp"
                     android:textStyle="bold" />
@@ -148,23 +148,8 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
-                    android:paddingHorizontal="13dp"
+                    android:paddingHorizontal="14dp"
                     android:text="+ Widget"
-                    android:textColor="#9D174D"
-                    android:textSize="11.5sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/quick_btn_notifs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_chip_inactive"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingHorizontal="13dp"
-                    android:text="Alertes"
                     android:textColor="#9D174D"
                     android:textSize="11.5sp"
                     android:textStyle="bold" />
@@ -177,7 +162,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
-                    android:paddingHorizontal="13dp"
+                    android:paddingHorizontal="14dp"
                     android:text="+ Club"
                     android:textColor="#FFFFFF"
                     android:textSize="11.5sp"
@@ -217,6 +202,7 @@
                         android:clickable="true"
                         android:elevation="3dp"
                         android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:orientation="vertical"
                         android:padding="14dp"
                         android:visibility="gone">
@@ -231,28 +217,15 @@
                                 android:id="@+id/hero_kicker"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
                                 android:layout_weight="1"
                                 android:ellipsize="end"
-                                android:letterSpacing="0.08"
+                                android:letterSpacing="0.06"
                                 android:maxLines="1"
                                 android:text="À LA UNE"
                                 android:textColor="#DB2777"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/hero_vpn_badge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
-                                android:background="@drawable/bg_vpn_pill"
-                                android:paddingHorizontal="6dp"
-                                android:paddingVertical="2dp"
-                                android:text="VPN"
-                                android:textColor="#B45309"
-                                android:textSize="9sp"
-                                android:textStyle="bold"
-                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/hero_countdown"
@@ -397,11 +370,26 @@
                                 android:id="@+id/hero_followed"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
                                 android:layout_weight="1"
                                 android:ellipsize="end"
                                 android:maxLines="1"
                                 android:textColor="#7A5C6B"
                                 android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/hero_vpn_badge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_vpn_pill"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:text="VPN"
+                                android:textColor="#B45309"
+                                android:textSize="9sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
 
                             <TextView
                                 android:layout_width="wrap_content"

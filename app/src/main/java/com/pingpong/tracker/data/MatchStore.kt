@@ -168,14 +168,14 @@ class MatchStore(context: Context) {
         val SUGGESTED_CLUBS = listOf(
             "CTT Bruille",
             "SPO Rouen",
-            "AS Pontoise-Cergy",
-            "Alliance Nîmes",
             "GV Hennebont",
-            "Morez Haut-Jura",
-            "Les Loups d'Angers",
+            "Alliance Nîmes/Montpellier",
             "C'Chartres TT",
-            "Saint-Denis US 93",
-            "Thorigné-Fouillard",
+            "Saint-Denis TT 93",
+            "Roanne LNTT",
+            "La Romagne SS",
+            "Thorigné-Fouillard TT",
+            "Les Loups d'Angers",
         )
 
         const val PREFS_NAME = "pingpong_tracker_prefs"

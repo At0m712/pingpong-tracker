@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:letterSpacing="0.06"
-            android:text="RÉGLAGES &amp; NOTIFICATIONS"
+            android:text="RÉGLAGES"
             android:textColor="#1E1118"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -27,85 +27,11 @@
             android:textColor="#7A5C6B"
             android:textSize="12sp" />
 
-        <!-- Notifications Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:letterSpacing="0.06"
-            android:text="ALERTES PERSONNALISÉES"
-            android:textColor="#DB2777"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-
-        <Switch
-            android:id="@+id/switch_notif_30m"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="6dp"
-            android:text="Rappel 30 min avant le match"
-            android:textColor="#1E1118"
-            android:textSize="13sp" />
-
-        <Switch
-            android:id="@+id/switch_notif_live"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="6dp"
-            android:text="Alerte coup d'envoi &amp; En direct"
-            android:textColor="#1E1118"
-            android:textSize="13sp" />
-
-        <Switch
-            android:id="@+id/switch_notif_clubs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="6dp"
-            android:text="Alertes mes clubs (CTT Bruille &amp; ajouts)"
-            android:textColor="#1E1118"
-            android:textSize="13sp" />
-
-        <Switch
-            android:id="@+id/switch_notif_intl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="6dp"
-            android:text="Alertes WTT / Compétitions inter"
-            android:textColor="#1E1118"
-            android:textSize="13sp" />
-
-        <Switch
-            android:id="@+id/switch_notif_vpn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="6dp"
-            android:text="Mentionner « Active ton VPN » si géo-bloqué"
-            android:textColor="#1E1118"
-            android:textSize="13sp" />
-
-        <Button
-            android:id="@+id/settings_btn_test_notif"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_button_dark"
-            android:text="Envoyer une notification de test"
-            android:textAllCaps="false"
-            android:textColor="#DB2777"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="16dp"
-            android:background="#26F472B6" />
-
         <!-- Feed URL -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:letterSpacing="0.06"
             android:text="SOURCE DES MATCHS"
             android:textColor="#DB2777"
